@@ -3,6 +3,7 @@ change_resolution.py
 Michael Hayashi
 
 Given a vidoe, outputs frames at changed resolution
+Outputs to `res/frames/<name>` (extracted frames of video) and to `res/resized/<name>` (changed resolution of extractedframes)
 """
 
 import sys
@@ -52,7 +53,7 @@ class Change_Resolution:
 
 
 def print_args():
-    print("Usage: python3 change_resolution.py -n <name> -v <video>")
+    print("Usage: python3 change_resolution.py -n <name> -v <video> [optional]-w <width> [optional]-h <height>")
 
 
 if __name__ == "__main__":

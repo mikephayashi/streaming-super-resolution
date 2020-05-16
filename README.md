@@ -41,7 +41,14 @@ For other runs:
 "Visiting the url to authorize this application" may tell you "This app isn't verified". If so, click advance (may be different if not in Chrome) and click "Go to `<app name>`(unsafe)". This is fine since this is our app. Allow permissions.
 
 ## change_resolution.py:
-Use later on to change video resolution
+- Default
+  - Width: 100
+  - Height: 100
+- <video> = path to video
+- <name> = name of new folders
+Usage: `python3 change_resolution.py -n <name> -v <video> [optional]-w <width> [optional]-h <height>`
+
+Outputs to `res/frames/<name>` (extracted frames of video) and to `res/resized/<name>` (changed resolution of extractedframes)
 
 ## main.py:
 Empty
