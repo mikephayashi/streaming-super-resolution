@@ -33,19 +33,22 @@ def download_video(id):
     sem.release()
 
 
-def collect_ids(num_vids, json):
+def collect_video_info(num_vids, json):
     """
     num_vids: number of videos returned in response
     json: video information returned in response
+    return ids: video ids
+    return page_token: id which page
     """
+    next_page_token = json['nextPageToken']
     ids = []
     for i in range(0, num_vids):
         vid_id = json['items'][i]['id']['videoId']
         ids.append(vid_id)
-    return ids
+    return ids, next_page_token
 
 
-def request_vids(page_token, client, search, definition, duration):
+def request_vids(requested_num, page_token, client, search, definition, duration):
     """
     Uses Youtube's API to fetch video info
     Return: (Number of videos fetched, video info as json)
@@ -72,7 +75,7 @@ def request_vids(page_token, client, search, definition, duration):
 
         request = youtube.search().list(
             part="snippet",
-            maxResults=5,  # 1-50
+            maxResults=requested_num,  # 1-50
             order="viewCount",
             q=search,
             type="video",
@@ -83,9 +86,9 @@ def request_vids(page_token, client, search, definition, duration):
     else:
         request = youtube.search().list(
             part="snippet",
-            maxResults=50,  # 1-50
+            maxResults=requested_num,  # 1-50
             order="viewCount",
-            pageToken=str(PAGE_TOKEN),
+            pageToken=page_token,
             q=search,
             type="video",
             videoDefinition=definition,
@@ -103,7 +106,7 @@ def print_args():
     Print cli arguments interface
     """
     print(
-        "download_yt.py -s/--search= \"<search term>\" -c/--client <client path> [optional]-e/--definition= <any, high, standard> [optional]-u/--duration= <any,long,medium,short>")
+        "download_yt.py -n/--number= <number of vidoes> -s/--search= \"<search term>\" -c/--client <client path> [optional]-e/--definition= <any, high, standard> [optional]-u/--duration= <any,long,medium,short>")
     print("Refer to repo's README.md for more info")
 
 
@@ -112,20 +115,21 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
 
     # Possible values
-    definitions = ["any", "high", "stadard"]
-    durations = ["any", "long", "medium", "short"]
+    definitions = ["high", "any", "standard"]
+    durations = ["medium", "long", "short", "any"]
 
     # Default values
-    page_token = None  # Retured in response json
+    next_page_token = None  # Retured in response json
     client = None  # Client.json path (Auth2.0 token in Youtubev3 API)
     search = None  # Search term used to look up videos
     definition = definitions[0]
     duration = durations[0]
+    num_left = 5  # Number of videos to download
 
     # Parse arguments
     try:
         opts, args = getopt.getopt(
-            argv, "hs:e:u:c:", ["search=", "definition=", "duration=", "client="])
+            argv, "hn:s:e:u:c:", ["number=", "search=", "definition=", "duration=", "client="])
     except getopt.GetoptError:
         print_args()
 
@@ -133,17 +137,21 @@ if __name__ == "__main__":
         if opt == '-h':
             print_args()
             sys.exit()
+        elif opt in ("-n", "--number"):
+            num_left = int(arg)
         elif opt in ("-s", "--search"):
             search = arg
         elif opt in ("-e", "--definition"):
-            if arg not in definition:
+            if arg not in definitions:
                 print("Not valid video definition")
                 print_args()
+                sys.exit()
             definition = arg
         elif opt in ("-u", "--duration"):
-            if arg not in duration:
+            if arg not in durations:
                 print("Not valid video duration")
                 print_args()
+                sys.exit()
             duration = arg
         elif opt in ("-c", "--client"):
             client = arg
@@ -160,15 +168,27 @@ if __name__ == "__main__":
         print_args()
         sys.exit()
 
-    num_vids, json = request_vids(page_token, client, search, definition, duration)
-    ids = collect_ids(num_vids, json)
+    while num_left > 0:
 
-    # Spawn about 3 threads to speed up downloads
-    threads = []
-    for id in ids:
-        thread = threading.Thread(target=download_video, args=(id,))
-        threads.append(thread)
-        thread.start()
+        # Max request is at 50, so keep requesting until 0
+        requested_num = 0
+        if num_left > 50:
+            requested_num = 50
+            num_left -= 50
+        else:
+            requested_num = num_left
+            num_left = 0
 
-    for index, thread in enumerate(threads):
-        thread.join()
+        num_vids, json = request_vids(
+            requested_num, next_page_token, client, search, definition, duration)
+        ids, next_page_token = collect_video_info(num_vids, json)
+
+        # Spawn 3 threads to speed up downloads
+        threads = []
+        for id in ids:
+            thread = threading.Thread(target=download_video, args=(id,))
+            threads.append(thread)
+            thread.start()
+
+        for index, thread in enumerate(threads):
+            thread.join()

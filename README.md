@@ -16,7 +16,7 @@ For default run:
 - Search = "programming tutorials"
 
 For other runs:
-`python3 download_yt.py -s/--search= "<search term>" -c/--client <client path> [optional]-e/--definition= <any, high, standard> [optional]-u/--duration= <any,long,medium,short>`
+`download_yt.py -n/--number= <number of vidoes> -s/--search= \"<search term>\" -c/--client <client path> [optional]-e/--definition= <any, high, standard> [optional]-u/--duration= <any,long,medium,short>`
 - Shortform ex. `python3 download_yt.py -s "programming tutorials" -c ./client.json`
 - Longform equivalent. `python3 download_yt.py --search="programming tutorials" -client=./client.json`
 - **Must wrap `<search term>` in quotation marks to capture multiple keywords**
