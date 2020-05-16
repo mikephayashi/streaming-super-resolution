@@ -29,7 +29,7 @@ def download_video(id):
     print("Downloading: ", id)
     yt = YouTube('https://www.youtube.com/watch?v=' + id)
     stream = yt.streams.first()
-    stream.download('./youtube_vids')
+    stream.download('./res/youtube_vids')
     sem.release()
 
 

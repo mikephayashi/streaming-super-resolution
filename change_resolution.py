@@ -1,19 +1,89 @@
-import sys
-from PIL import Image
+"""
+change_resolution.py
+Michael Hayashi
 
+Given a vidoe, outputs frames at changed resolution
+"""
+
+import sys
+import os
+import cv2
+import sys
+import getopt
+from PIL import Image
 
 class Change_Resolution:
 
-    def __init__(self, image):
-        self.image = Image.open("./res/" + image + ".jpg")
-        #  self.image = Image.open(image)
+    def __init__(self, name, video):
+        self.video = video
+        self.extracted_path = "./res/frames/" + name + "/"
+        self.resized_path = "./res/resized/" + name + "/"
+        self.num_frames = 0
+        if not os.path.exists(self.extracted_path):
+            os.makedirs(self.extracted_path)
+        if not os.path.exists(self.resized_path):
+            os.makedirs(self.resized_path)
+
+    def extract_frames(self):
+        """
+        Extracts frames from videos
+        """
+
+
+        vidcap = cv2.VideoCapture(self.video)
+        success, image = vidcap.read()
+        while success:
+            cv2.imwrite(self.extracted_path + "frame%d.jpg" %
+                        self.num_frames, image)     # save frame as JPEG file 
+            success, image = vidcap.read()
+            print('Read a new frame: ', success)
+            self.num_frames += 1
 
     def change_res(self, width, height):
-        resized_image = self.image.resize((width, height))
-        resized_image.save("./resized/test-" + str(width) + "x" + str(height) + ".png")
+        """
+        Changes frame resolution
+        """
+
+        for i in range(0, self.num_frames):
+            image = Image.open(self.extracted_path + "frame%d.jpg" % i)
+            resized_image = image.resize((width, height))
+            resized_image.save(self.resized_path + "frame%d.jpg" % i)
+            print('Changing res: image ', i)
+
+
+def print_args():
+    print("Usage: python3 change_resolution.py -n <name> -v <video>")
 
 
 if __name__ == "__main__":
-    input_image = sys.argv[1]
-    original_image = Change_Resolution(input_image)
-    original_image.change_res(100, 100)
+    argv = sys.argv[1:]
+
+    name = None
+    video = None
+    width = 100
+    height = 100
+
+    try:
+        opts, args = getopt.getopt(argv, "n:v:w:h:", ["name=", "video=", "width=", "height="])
+    except getopt.GetoptError:
+        print_args()
+
+    for opt, arg in opts:
+        if opt in ("-n", "--name"):
+            name = arg
+        elif opt in ("-v", "--video"):
+            video = arg
+        elif opt in ("-w", "--width"):
+            width = arg
+        elif opt in ("-h", "--height"):
+            height = arg
+    
+    if name is None or video is None:
+        print_args()
+        sys.exit()
+        
+    original_vid = Change_Resolution(name, video)
+    original_vid.extract_frames()
+    original_vid.change_res(width, height)
+
+
