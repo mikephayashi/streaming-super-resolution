@@ -4,3 +4,6 @@ youtube_vids
 tf_record.py
 test.py
 youtube_tfrecords
+res/frames
+res/resized
+res/info
