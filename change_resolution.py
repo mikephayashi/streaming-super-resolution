@@ -44,13 +44,14 @@ class Change_Resolution:
             cv2.imwrite(self.extracted_path + "frame%d.jpg" %
                         self.num_frames, image)     # save frame as JPEG file 
             success, image = vidcap.read()
-            print('Read a new frame: ', success, ": " count)
+            print('Read a new frame: ', success, ": ", count)
             self.num_frames += 1
             count += 1
 
         with open(self.info_path, 'a+') as info:
             width = vidcap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float
             height = vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT)  
+            info.write("Num of frames: {count}\n".format(count=count))
             info.write("Original dimensions {w}x{h}\n".format(w=width, h=height))
             info.close()
 

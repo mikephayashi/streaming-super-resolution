@@ -1,9 +1,12 @@
-# Reference: https://medium.com/pytorch/implementing-an-autoencoder-in-pytorch-19baa22647d1
+# Autoencoder: https://medium.com/pytorch/implementing-an-autoencoder-in-pytorch-19baa22647d1
+# Displaying image: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html#sphx-glr-beginner-blitz-cifar10-tutorial-py
 
 import torch
 import torchvision
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Autoencoder(nn.Module):
@@ -68,10 +71,28 @@ test_loader = torch.utils.data.DataLoader(
     test_dataset, batch_size=32, shuffle=False, num_workers=4
 )
 
+def imshow(img):
+    img = img / 2 + 0.5     # unnormalize
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
+
+def disp_img(input):
+    grid = torchvision.utils.make_grid(input.cpu())
+    img = grid / 2 + 0.5     # unnormalize
+    npimg = img.detach().numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
+
 epochs = 2
 for epoch in range(epochs):
     loss = 0
     for batch_features, _ in train_loader:
+
+        # print("--------------------")
+        # print("Batch features")
+        # disp_img(batch_features)
+
         # reshape mini-batch data to [N, 784] matrix
         # load it to the active device
         batch_features = batch_features.view(-1, 784).to(device)
@@ -82,6 +103,10 @@ for epoch in range(epochs):
 
         # compute reconstructions
         outputs = model(batch_features)
+
+        # print("Output")
+        # disp_img(outputs.reshape([128, 1, 28, 28]))
+        # print("--------------------")
 
         # compute training reconstruction loss
         train_loss = criterion(outputs, batch_features)
@@ -100,3 +125,36 @@ for epoch in range(epochs):
 
     # display the epoch training loss
     print("epoch : {}/{}, loss = {:.6f}".format(epoch + 1, epochs, loss))
+
+print("Weights")
+# print(list(model.parameters()))
+
+for batch_features, _ in train_loader:
+        print("--------------------")
+        print("Batch features")
+        disp_img(batch_features)
+
+        # reshape mini-batch data to [N, 784] matrix
+        # load it to the active device
+        batch_features = batch_features.view(-1, 784).to(device)
+
+        # reset the gradients back to zero
+        # PyTorch accumulates gradients on subsequent backward passes
+        optimizer.zero_grad()
+
+        # compute reconstructions
+        outputs = model(batch_features)
+
+        print("Output")
+        disp_img(outputs.reshape([128, 1, 28, 28]))
+        print("--------------------")
+
+        #Ref: https://pytorch.org/tutorials/beginner/saving_loading_models.html
+
+torch.save(model.state_dict(), "./params")
+print("Saved")
+
+model = Autoencoder(input_shape=784)
+model.load_state_dict(torch.load("./params"))
+model.eval()
+print("Loaded")
