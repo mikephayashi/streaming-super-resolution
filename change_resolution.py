@@ -94,9 +94,9 @@ if __name__ == "__main__":
         elif opt in ("-v", "--video"):
             video = arg
         elif opt in ("-w", "--width"):
-            width = arg
+            width = int(arg)
         elif opt in ("-h", "--height"):
-            height = arg
+            height = int(arg)
     
     if name is None or video is None:
         print_args()

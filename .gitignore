@@ -7,3 +7,5 @@ youtube_tfrecords
 res/frames
 res/resized
 res/info
+video.avi
+torch_datasets

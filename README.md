@@ -1,8 +1,21 @@
 # streaming-super-resolution
 Reconstructs streamed low res to high res video
 
+##### [Michael's Colab](https://colab.research.google.com/drive/14aq0YhkuuyEN0FXvNIfEwVEwdBC8nbSg#scrollTo=GytH-0oJXJkX)
+
+## TODO:
+- Split training/test photos
+- Train hyperparameters
+- k cross validation
+- Variational ae
+- Video specific
+- Off the shelf ae/gan comparison
+- PSNR / SSIM
+
 
 - [streaming-super-resolution](#streaming-super-resolution)
+        - [Michael's Colab](#michaels-colab)
+  - [TODO:](#todo)
   - [download_yt.py:](#downloadytpy)
   - [change_resolution.py:](#changeresolutionpy)
   - [main.py:](#mainpy)
