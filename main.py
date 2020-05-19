@@ -12,7 +12,7 @@ import numpy as np
 from Autoencoder import Autoencoder
 
 NUM_EPOCHS = 5
-BATCH_SIZE = 1024
+BATCH_SIZE = 128
 
 
 class Identity(nn.Module):
@@ -42,8 +42,6 @@ Set up model
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = Autoencoder(input_shape=100*100).to(device)
-for param in model.parameters():
-    param.required_grad = False
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 criterion = nn.MSELoss()
 
@@ -77,10 +75,9 @@ for epoch in range(NUM_EPOCHS):
         # disp_img(batch_features[0])
 
         # reshape mini-batch data to [N, d] matrix
-        batch_features = batch_features[0].to(device)
+        batch_features = batch_features[0].view(-1, 100*100).to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
-        # train_loss = criterion(outputs, batch_features)
         train_loss = criterion(outputs, batch_features[0])
         train_loss.backward()
         optimizer.step()

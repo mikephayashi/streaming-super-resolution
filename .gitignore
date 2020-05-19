@@ -9,3 +9,6 @@ res/resized
 res/info
 video.avi
 torch_datasets
+client_id.json
+client_secrets.json
+gdrive.py

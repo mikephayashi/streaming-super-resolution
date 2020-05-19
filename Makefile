@@ -3,7 +3,11 @@ m?= update
 run:
 	# python3 download_yt.py -s "programming tutorials" -c ./client.json
 	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
-	# python3 load_data.py -f test -n 10 -w 100 -h 100
+
+all:
+	python3 download_yt.py -s "programming tutorials" -c ./client.json
+	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
+	python3 main.py
 	
 
 long:
