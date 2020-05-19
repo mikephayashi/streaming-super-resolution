@@ -13,19 +13,12 @@ import numpy as np
 
 from Autoencoder import Autoencoder
 
-NUM_EPOCHS = 100
+NUM_EPOCHS = 1000
 BATCH_SIZE = 1024
+DIMENSIONS = 640 * 320
 
 if not os.path.exists("./params"):
     os.makedirs("./params")
-
-
-class Identity(nn.Module):
-    def __init__(self):
-        super(Identity, self).__init__()
-
-    def forward(self, x):
-        return x
 
 
 """
@@ -46,7 +39,7 @@ Set up model
 """
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = Autoencoder(input_shape=100*100).to(device)
+model = Autoencoder(input_shape=DIMENSIONS).to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 criterion = nn.MSELoss()
 
@@ -55,7 +48,7 @@ Load in data
 """
 transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
 train_set = torchvision.datasets.ImageFolder(
-    root="./res/resized",
+    root="./res/frames",
     transform=transform
 )
 train_loader = data.DataLoader(
@@ -74,6 +67,7 @@ for epoch in range(NUM_EPOCHS):
     # count = 0
     total_ssim = 0
     total_psnr = 0
+    import pdb; pdb.set_trace()
     for batch_features in train_loader:
 
         # print("--------------------")
@@ -81,13 +75,14 @@ for epoch in range(NUM_EPOCHS):
         # disp_img(batch_features[0])
 
         # reshape mini-batch data to [N, d] matrix
-        batch_features = batch_features[0].view(-1, 100*100).to(device)
+        batch_features = batch_features[0].view(-1, DIMENSIONS).to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs, batch_features[0])
         train_loss.backward()
         optimizer.step()
         loss += train_loss.item()
+        print(loss)
 
         # # SSIM
         # ssim_score = ssim(batch_features.reshape(

@@ -13,9 +13,16 @@ Reconstructs streamed low res to high res video
 - PSNR / SSIM
 
 
+## FIXME:
+- change_resolution.py
+  - Line 125 `original_vid.change_res(width, height)` commented out
+  - `name` unnecessary
+
+
 - [streaming-super-resolution](#streaming-super-resolution)
         - [Michael's Colab](#michaels-colab)
   - [TODO:](#todo)
+  - [FIXME:](#fixme)
   - [download_yt.py:](#downloadytpy)
   - [change_resolution.py:](#changeresolutionpy)
   - [main.py:](#mainpy)

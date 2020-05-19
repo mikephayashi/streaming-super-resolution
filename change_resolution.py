@@ -54,7 +54,7 @@ class Change_Resolution:
 
         with open(self.info_path, 'a+') as info:
             width = vidcap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float
-            height = vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT)  
+            height = vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT) 
             info.write("Num of frames: {count}\n".format(count=count))
             info.write("Original dimensions {w}x{h}\n".format(w=width, h=height))
             info.close()
@@ -106,6 +106,12 @@ if __name__ == "__main__":
     #     print_args()
     #     sys.exit()
 
+    # Make necessary dirs
+    if not os.path.exists("./res"):
+        os.makedirs("./res")
+    if not os.path.exists("./res/info"):
+        os.makedirs("./res/info")
+
     # Thread control
     sem = Semaphore(10)  
 
@@ -113,10 +119,10 @@ if __name__ == "__main__":
 
     def get_imgs(file_name):
         sem.acquire()
-        print("Spawning {file_name}".format(file_name=file_name))
+        print("Changing resolution {file_name}".format(file_name=file_name))
         original_vid = Change_Resolution(file_name, "./res/youtube_vids/{file_name}".format(file_name=file_name))
         original_vid.extract_frames()
-        original_vid.change_res(width, height)
+        # original_vid.change_res(width, height)
         sem.release()
     
     threads = []

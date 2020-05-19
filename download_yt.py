@@ -156,6 +156,9 @@ if __name__ == "__main__":
         elif opt in ("-c", "--client"):
             client = arg
 
+    if not os.path.exists("./res/youtube_vids"):
+        os.makedirs("./res/youtube_vids")
+
     # Exit if no client is specified
     if client is None:
         print("You must specify client")
