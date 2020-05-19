@@ -8,6 +8,8 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
 
+from Autoencoder import Autoencoder
+
 
 #  use gpu if available
 print("cuda" if torch.cuda.is_available() else "cpu")
