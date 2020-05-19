@@ -12,6 +12,10 @@ import cv2
 import sys
 import getopt
 from PIL import Image
+from os import listdir
+from os.path import isfile, join
+import threading
+from threading import Semaphore
 
 class Change_Resolution:
 
@@ -44,7 +48,7 @@ class Change_Resolution:
             cv2.imwrite(self.extracted_path + "frame%d.jpg" %
                         self.num_frames, image)     # save frame as JPEG file 
             success, image = vidcap.read()
-            print('Read a new frame: ', success, ": ", count)
+            # print('Read a new frame: ', success, ": ", count)
             self.num_frames += 1
             count += 1
 
@@ -63,7 +67,7 @@ class Change_Resolution:
             image = Image.open(self.extracted_path + "frame%d.jpg" % i)
             resized_image = image.resize((width, height))
             resized_image.save(self.resized_path + "frame%d.jpg" % i)
-            print('Changing res: image ', i)
+            # print('Changing res: image ', i)
         
         with open(self.info_path, 'a+') as info:
             info.write("New dimensions {w}x{h}\n".format(w=width, h=height))
@@ -80,8 +84,8 @@ if __name__ == "__main__":
 
     name = None
     video = None
-    width = 100
-    height = 100
+    width = 640
+    height = 360
 
     try:
         opts, args = getopt.getopt(argv, "n:v:w:h:", ["name=", "video=", "width=", "height="])
@@ -98,12 +102,28 @@ if __name__ == "__main__":
         elif opt in ("-h", "--height"):
             height = int(arg)
     
-    if name is None or video is None:
-        print_args()
-        sys.exit()
-        
-    original_vid = Change_Resolution(name, video)
-    original_vid.extract_frames()
-    original_vid.change_res(width, height)
+    # if name is None or video is None:
+    #     print_args()
+    #     sys.exit()
 
+    # Thread control
+    sem = Semaphore(10)  
 
+    onlyfiles = [f for f in listdir("./res/youtube_vids") if isfile(join("./res/youtube_vids", f)) and f != ".DS_Store"]
+
+    def get_imgs(file_name):
+        sem.acquire()
+        print("Spawning {file_name}".format(file_name=file_name))
+        original_vid = Change_Resolution(file_name, "./res/youtube_vids/{file_name}".format(file_name=file_name))
+        original_vid.extract_frames()
+        original_vid.change_res(width, height)
+        sem.release()
+    
+    threads = []
+    for file_name in onlyfiles:
+        thread = threading.Thread(target=get_imgs, args=(file_name,))
+        threads.append(thread)
+        thread.start()
+
+    for index, thread in enumerate(threads):
+        thread.join()

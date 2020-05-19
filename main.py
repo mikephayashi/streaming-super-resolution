@@ -7,12 +7,17 @@ import torch.optim as optim
 from torch.utils import data
 from pytorch_msssim import ssim
 import matplotlib.pyplot as plt
+
+import os
 import numpy as np
 
 from Autoencoder import Autoencoder
 
-NUM_EPOCHS = 5
-BATCH_SIZE = 128
+NUM_EPOCHS = 100
+BATCH_SIZE = 1024
+
+if not os.path.exists("./params"):
+    os.makedirs("./params")
 
 
 class Identity(nn.Module):
@@ -63,6 +68,7 @@ start = time.time()
 cur_epochs = 0
 total_epochs = []
 losses = []
+param_count = 0
 for epoch in range(NUM_EPOCHS):
     loss = 0
     # count = 0
@@ -104,9 +110,17 @@ for epoch in range(NUM_EPOCHS):
     # print("psnr: ", total_psnr / count)
     loss = loss / len(train_loader)
     losses.append(loss)
+    with open("./params/losses.txt", "a") as file:
+        file.write("{loss}, ".format(loss=loss))
     cur_epochs += 1
     total_epochs.append(cur_epochs)
     print("epoch : {}/{}, loss = {:.6f}".format(epoch + 1, NUM_EPOCHS, loss))
+
+    """
+    Saved model
+    """
+    param_count += 1
+    torch.save(model.state_dict(), "./params/params{num}.pt".format(num=param_count))
 
 
 end = time.time()
@@ -116,8 +130,8 @@ print("Time: ", end - start)
 Save model
 """
 # Ref: https://pytorch.org/tutorials/beginner/saving_loading_models.html
-torch.save(model.state_dict(), "./params.pt")
-print("Saved")
+# torch.save(model.state_dict(), "./params.pt")
+# print("Saved")
 
 # model = Autoencoder(input_shape=784)
 # model.load_state_dict(torch.load("./params"))
@@ -127,5 +141,5 @@ print("Saved")
 """
 Loss Curve
 """
-plt.scatter(total_epochs, losses)
-plt.show()
+# plt.scatter(total_epochs, losses)
+# plt.show()
