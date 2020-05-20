@@ -5,12 +5,13 @@ Reconstructs streamed low res to high res video
 
 ## TODO:
 - Split training/test photos
-- Train hyperparameters
+- Videos are biased - more reprsetned than others
+- Vary HR and LR frames
+- Train hyperparameters: learning rate
 - k cross validation
 - Variational ae
-- Video specific
 - Off the shelf ae/gan comparison
-- PSNR / SSIM
+- Update readme.md
 
 
 ## FIXME:
@@ -29,6 +30,8 @@ Reconstructs streamed low res to high res video
 
 
 ## download_yt.py:
+
+Default output: 640x320
 
 For default run:
 - `make run` 

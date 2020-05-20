@@ -13,3 +13,5 @@ client_id.json
 client_secrets.json
 gdrive.py
 params
+/torch_datasets/MNIST
+.ipynb_checkpoints
