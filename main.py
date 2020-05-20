@@ -89,19 +89,19 @@ for epoch in range(NUM_EPOCHS):
 
         # reshape mini-batch data to [N, d] matrix
         # batch_features = batch_features[0].view(-1, DIMENSIONS).to(device)
-        batch_features = batch_features[0].to(device)
+        batch_features = batch_features.to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
-        train_loss = criterion(outputs[0], batch_features[0])
+        train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
         optimizer.step()
         loss += train_loss.item()
         # SSIM
-        ssim_score += ssim(batch_features[0].reshape(
+        ssim_score += ssim(batch_features.reshape(
             (-1, 3, 256, 256)), outputs[0].reshape((-1, 3, 256, 256)))
 
         # PSNR
-        mse = torch.mean((batch_features[0].reshape((-1, 3, 256, 256)
+        mse = torch.mean((batch_features.reshape((-1, 3, 256, 256)
                                                     ) - outputs[0].reshape((-1, 3, 256, 256))) ** 2)
         psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
