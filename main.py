@@ -96,14 +96,15 @@ for epoch in range(NUM_EPOCHS):
         train_loss.backward()
         optimizer.step()
         loss += train_loss.item()
-        # SSIM
-        ssim_score += ssim(batch_features.reshape(
-            (-1, 3, 256, 256)), outputs[0].reshape((-1, 3, 256, 256)))
 
-        # PSNR
-        mse = torch.mean((batch_features.reshape((-1, 3, 256, 256)
-                                                    ) - outputs[0].reshape((-1, 3, 256, 256))) ** 2)
-        psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
+        # SSIM
+        # ssim_score += ssim(batch_features.view(
+        #     (-1, 3, 256, 256)), outputs[0].view((-1, 3, 256, 256)))
+
+        # # PSNR
+        # mse = torch.mean((batch_features.view((-1, 3, 256, 256)
+        #                                             ) - outputs[0].view((-1, 3, 256, 256))) ** 2)
+        # psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
     loss = loss / len(train_loader)
     ssim_score = ssim_score / len(train_loader)
