@@ -89,7 +89,7 @@ for epoch in range(NUM_EPOCHS):
 
         # reshape mini-batch data to [N, d] matrix
         # batch_features = batch_features[0].view(-1, DIMENSIONS).to(device)
-        batch_features = batch_features.to(device)
+        batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
