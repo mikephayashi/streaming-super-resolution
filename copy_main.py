@@ -15,7 +15,7 @@ from Autoencoder import Autoencoder
 
 NUM_EPOCHS = 1000
 BATCH_SIZE = 1024
-DIMENSIONS = 640 * 320
+DIMENSIONS = 256 * 256
 
 if not os.path.exists("./params"):
     os.makedirs("./params")
@@ -48,7 +48,7 @@ Load in data
 """
 transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
 train_set = torchvision.datasets.ImageFolder(
-    root="./res/frames",
+    root="./res/resized",
     transform=transform
 )
 train_loader = data.DataLoader(
@@ -77,6 +77,7 @@ for epoch in range(NUM_EPOCHS):
         batch_features = batch_features[0].view(-1, DIMENSIONS).to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
+        import pdb; pdb.set_trace()
         train_loss = criterion(outputs, batch_features[0])
         train_loss.backward()
         optimizer.step()

@@ -115,7 +115,7 @@ class Quantize(nn.Module):
         embed_onehot = F.one_hot(embed_ind, self.n_embed).type(flatten.dtype)
         embed_ind = embed_ind.view(*input.shape[:-1])
         quantize = self.embed_code(embed_ind)
-        print(self.cluster_size.shape, quantize.shape)
+        # print(self.cluster_size.shape, quantize.shape)
 
         if self.training:
             self.cluster_size.data.mul_(self.decay).add_(
@@ -197,7 +197,7 @@ class VQVAE(nn.Module):
 
     def decode(self, quant_t, quant_b):
         upsample_t = self.upsample_t(quant_t)
-        print(quant_t.shape)
+        # print(quant_t.shape)
         quant = torch.cat([upsample_t, quant_b], 1)
         dec = self.dec(quant)
 

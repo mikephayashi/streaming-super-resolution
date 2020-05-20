@@ -5,3 +5,4 @@ pytorch-msssim
 google-auth-oauthlib
 opencv-python-headless
 scikit-image
+tqdm
