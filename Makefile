@@ -25,3 +25,6 @@ git:
 
 clear-all:
 	rm -rf ./res
+
+clear-params:
+	rm -rf ./params
