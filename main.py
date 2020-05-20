@@ -64,10 +64,11 @@ criterion = nn.MSELoss()
 # transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]), ])
 
 transform = torchvision.transforms.Compose([
+    transforms.Resize(256),
     transforms.ToTensor()
 ])
 train_set = torchvision.datasets.ImageFolder(
-    root="./res/resized",
+    root="./res/frames",
     transform=transform
 )
 train_loader = data.DataLoader(
