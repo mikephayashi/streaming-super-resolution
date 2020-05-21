@@ -132,6 +132,9 @@ if __name__ == "__main__":
     duration = durations[0]
     num_left = 5  # Number of videos to download
 
+    if not os.path.exists("./logs"):
+        os.makedirs("./logs")
+
     # Parse arguments
     try:
         opts, args = getopt.getopt(

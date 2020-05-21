@@ -49,9 +49,6 @@ BATCH_SIZE = 128
 if not os.path.exists("./params"):
     os.makedirs("./params")
 
-if not os.path.exists("./logs"):
-    os.makedirs("./logs")
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
 # for param in model.parameters():
