@@ -109,7 +109,7 @@ for epoch in range(NUM_EPOCHS):
         optimizer.step()
         loss += train_loss.item()
 
-        iteration += 1
+        iteration += 1 
 
     loss = loss / len(train_loader)
     ssim_score = ssim_score / len(train_loader)
