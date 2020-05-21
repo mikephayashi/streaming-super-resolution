@@ -19,6 +19,7 @@ from pytube import YouTube  # pip3 (or pip) install pytube3 not pytube
 
 # Thread control
 sem = Semaphore(3)  # Limit at 3
+log_sem = Semaphore(1)
 
 
 def download_video(id):
@@ -27,6 +28,11 @@ def download_video(id):
     """
     sem.acquire()
     print("Downloading: ", id)
+    log_sem.acquire()
+    with open("logs/videos", "a") as file:
+        file.write("{id}\n".format(id=id))
+        file.close()
+    log_sem.release()
     yt = YouTube('https://www.youtube.com/watch?v=' + id)
     stream = yt.streams.first()
     stream.download('./res/youtube_vids')

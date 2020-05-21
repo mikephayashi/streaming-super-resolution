@@ -23,8 +23,11 @@ git:
 	git push origin master
 	echo https://github.com/mikephayashi/streaming-super-resolution
 
-clear-all:
+clear-res:
 	rm -rf ./res
 
 clear-params:
 	rm -rf ./params
+
+clear-logs:
+	rm -rf ./logs
