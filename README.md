@@ -30,6 +30,7 @@ Reconstructs streamed low res to high res video
   - [main.py:](#mainpy)
 
 ## GCP
+* SSH `ssh -i ./ssh_keys/key mikephayashi@34.82.82.235`
 * Key Generation for gcp instance: `ssh-keygen -t rsa -f ./ssh_keys/key -C mikephayashi` [Ref](https://www.youtube.com/watch?v=2ibBF9YqveY)
 * Transferring files: `scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/`
 

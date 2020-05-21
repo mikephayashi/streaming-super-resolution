@@ -80,7 +80,7 @@ class Change_Resolution:
             info.close()
 
     def remove_vid(self):
-        shutil.rmtree(self.extracted_path)
+        # shutil.rmtree(self.extracted_path)
         os.remove(self.video)
 
 
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     video = None
     width = 256
     height = 256
-    skip = 2
+    skip = 6
 
     try:
         opts, args = getopt.getopt(argv, "n:v:w:h:s:", ["name=", "video=", "width=", "height=", "skip="])
@@ -134,7 +134,7 @@ if __name__ == "__main__":
         print("Changing resolution {file_name}".format(file_name=file_name))
         original_vid = Change_Resolution(file_name, "./res/youtube_vids/{file_name}".format(file_name=file_name), skip)
         original_vid.extract_frames()
-        original_vid.change_res(width, height)
+        # original_vid.change_res(width, height)
         original_vid.remove_vid()
         
         sem.release()
