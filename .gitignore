@@ -16,3 +16,4 @@ torch_datasets
 ssh_keys
 in development
 __pycache__
+vae example

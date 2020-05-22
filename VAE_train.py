@@ -68,13 +68,13 @@ for epoch in range(NUM_EPOCHS):
     for batch_features in train_loader:
         if iteration == 10:
             print("Iteration {it}".format(it=iteration))
+            end = time.time()
+            time_dif = end - start
+            print("Time: ", time_dif)
         if iteration == 50:
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/VAE/params{num}.pt".format(num=param_count))
-            end = time.time()
-            time_dif = end - start
-            print("Time: ", time_dif)
             with open("./logs/VAE/times.txt", "a") as file:
                 file.write("{time}".format(time=time_dif))
                 file.close()
