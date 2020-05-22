@@ -77,7 +77,7 @@ class VAE(nn.Module):
     def forward(self, x, iteration):
         if iteration == 13:
             self.encoder = nn.Sequential(
-                nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
+                nn.Conv2d(3, 32, kernel_size=4, stride=2),
                 Break(),
                 nn.ReLU(),
                 nn.Conv2d(32, 64, kernel_size=4, stride=2),
