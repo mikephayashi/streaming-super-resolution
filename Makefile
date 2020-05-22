@@ -1,10 +1,11 @@
 m?= update
 
-train:
-	python3 
-
-test:
-	python3
+all:
+	python3 VQVAE2_train.py
+	python3 VAE_train.py
+	python3 VQVAE2_eval.py 
+	python3 VAE_eval.py
+	echo "Done :)"
 
 vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
