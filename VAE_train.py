@@ -65,7 +65,7 @@ for epoch in range(NUM_EPOCHS):
         # Loss and back
         batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
-        outputs = model(batch_features, iteration)
+        outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
         if isnan(train_loss):
             import pdb; pdb.set_trace()
