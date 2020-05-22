@@ -54,7 +54,6 @@ if not os.path.exists("./logs/VQVAE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
-model.share_memory()
 count = 0
 # for param in model.parameters():
 #     count += 1

@@ -53,7 +53,6 @@ if not os.path.exists("./logs/VQVAE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
-model.share_memory()
 count = 0
 # for param in model.parameters():
 #     count += 1
@@ -70,7 +69,7 @@ transform = torchvision.transforms.Compose([
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
 test_set = torchvision.datasets.ImageFolder(
-    root="./res/frames/test",
+    root="./res/frames/train",
     transform=transform
 )
 test_loader = data.DataLoader(
@@ -99,13 +98,15 @@ for epoch in range(NUM_EPOCHS):
         outputs = model(batch_features)
         test_loss = criterion(outputs[0], batch_features)
 
+        #FIXME: 
+
         # SSIM
-        ssim_score += ssim(batch_features.view(
-            (-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
+        ssim_score += ssim(batch_features.take().view(
+            (-1, 3, 128, 128)), outputs[0].take().view((-1, 3, 128, 128)))
 
         # PSNR
-        mse = torch.mean((batch_features.view((-1, 3, 128, 128)
-                                              ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
+        mse = torch.mean((batch_features.take().view((-1, 3, 128, 128)
+                                              ) - outputs.take()[0].view((-1, 3, 128, 128))) ** 2)
         psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
         print("SSIM: ", ssim_score)
