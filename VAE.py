@@ -103,7 +103,7 @@ import torch.backends.cudnn as cudnn
 
 ngf = 64
 ndf = 64
-nc = 1
+nc = 3
 
 class VAE(nn.Module):
     def __init__(self):
