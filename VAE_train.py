@@ -24,16 +24,16 @@ from VAE import VAE
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
-if not os.path.exists("./params"):
-    os.makedirs("./params")
 if not os.path.exists("./params/VAE"):
     os.makedirs("./params/VAE")
 if not os.path.exists("./logs/VAE"):
     os.makedirs("./logs/VAE")
 
 
+print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VAE()
+model = model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 

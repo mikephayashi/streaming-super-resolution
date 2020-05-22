@@ -44,13 +44,12 @@ vqvae_path = './vae example/vqvae_560.pt'
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
-if not os.path.exists("./params")
-    os.makedirs("./params")
 if not os.path.exists("./params/VQVAE"):
     os.makedirs("./params/VQVAE")
 if not os.path.exists("./logs/VQVAE"):
     os.makedirs("./logs/VQVAE")
 
+print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
 # for param in model.parameters():
@@ -86,16 +85,15 @@ for epoch in range(NUM_EPOCHS):
 
     for batch_features in train_loader:
 
-
         if iteration == 10:
             print("Iteration {it}".format(it=iteration))
+            end = time.time()
+            time_dif = end - start
+            print("Time: ", time_dif)
         if iteration == 50:
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/VQVAE/params{num}.pt".format(num=param_count))
-            end = time.time()
-            time_dif = end - start
-            print("Time: ", time_dif)
             with open("./logs/VQVAE/times.txt", "a") as file:
                 file.write("{time}".format(time=time_dif))
                 file.close()
@@ -109,7 +107,7 @@ for epoch in range(NUM_EPOCHS):
         optimizer.step()
         loss += train_loss.item()
 
-        iteration += 1 
+        iteration += 1
 
     loss = loss / len(train_loader)
     ssim_score = ssim_score / len(train_loader)
