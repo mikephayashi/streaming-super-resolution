@@ -165,4 +165,4 @@ if __name__ == "__main__":
         thread.join()
 
 from alarm import Alarm
-Alarm().play()
+Alarm().hooray()

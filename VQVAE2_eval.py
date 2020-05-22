@@ -132,4 +132,4 @@ with torch.no_grad():
         print("Epoch:{loss}".format(loss=loss))
 
 from alarm import Alarm
-Alarm().play()
+Alarm().hooray()
