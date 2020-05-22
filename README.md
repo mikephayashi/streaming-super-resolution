@@ -3,32 +3,13 @@ Reconstructs streamed low res to high res video
 
 ##### [Michael's Colab](https://colab.research.google.com/drive/14aq0YhkuuyEN0FXvNIfEwVEwdBC8nbSg#scrollTo=GytH-0oJXJkX)
 
-## TODO:
-- Split training/test photos
-- Videos are biased - more reprsetned than others
-- Vary HR and LR frames
-- Train hyperparameters: learning rate
-- k cross validation
-- Variational ae
-- Off the shelf ae/gan comparison
-- Update readme.md
-
-
-## FIXME:
-- change_resolution.py
-  - Line 125 `original_vid.change_res(width, height)` commented out
-  - `name` unnecessary
-
 
 - [streaming-super-resolution](#streaming-super-resolution)
         - [Michael's Colab](#michaels-colab)
-  - [TODO:](#todo)
-  - [FIXME:](#fixme)
   - [General notes](#general-notes)
   - [GCP](#gcp)
   - [download_yt.py:](#downloadytpy)
   - [change_resolution.py:](#changeresolutionpy)
-  - [main.py:](#mainpy)
 
 ## General notes
 
@@ -38,7 +19,9 @@ Reconstructs streamed low res to high res video
 * SSH `ssh -i ./ssh_keys/key mikephayashi@34.82.82.235`
   * Alt: `ssh -i ./ssh_keys/key mikephayashi@35.233.175.213`
 * Key Generation for gcp instance: `ssh-keygen -t rsa -f ./ssh_keys/key -C mikephayashi` [Ref](https://www.youtube.com/watch?v=2ibBF9YqveY)
-* Transferring files: `scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution`
+* Transferring files: 
+  * Local to vm (run on local)`scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution`
+  * Vm to local (run on local): `scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs /Users/michaelhayashi/Desktop`
 * `git reset --hard`
 
 ## download_yt.py:
@@ -76,12 +59,10 @@ For other runs:
 "Visiting the url to authorize this application" may tell you "This app isn't verified". If so, click advance (may be different if not in Chrome) and click "Go to `<app name>`(unsafe)". This is fine since this is our app. Allow permissions.
 
 ## change_resolution.py:
+**Change resolution commented out, uses pytorch change resolution**
 - Default
-  - Width: 100
-  - Height: 100
+  - Width: 256
+  - Height: 256
 Usage: `Usage: python3 change_resolution.py [optional]-w <width> [optional]-h <height> -s/--skip= <num to skip default=6>`
 
 Outputs to `res/frames/<name>` (extracted frames of video) and to `res/resized/<name>` (changed resolution of extractedframes)
-
-## main.py:
-Empty

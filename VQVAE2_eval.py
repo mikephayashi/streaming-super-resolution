@@ -40,7 +40,7 @@ def load_model(model, checkpoint, device):
     return model
 
 
-vqvae_path = './params/VQVAE/params1.pt'
+vqvae_path = './params/VQVAE/params4.pt'
 
 if not os.path.exists("./logs/VQVAE"):
     os.makedirs("./logs/VQVAE")

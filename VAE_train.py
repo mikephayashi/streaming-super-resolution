@@ -68,7 +68,6 @@ for epoch in range(NUM_EPOCHS):
         train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
         optimizer.step()
-        import pdb; pdb.set_trace()
         total_loss += train_loss.item()
 
 
@@ -88,8 +87,8 @@ for epoch in range(NUM_EPOCHS):
             torch.save(model.state_dict(),
                        "./params/VAE/params{num}.pt".format(num=param_count))
             total_loss = total_loss / loss_count
-            with open("./logs/VAE/params.txt", "a") as file:
-                file.write("{train_loss}\n".format(train_loss=train_loss.item()))
+            with open("./logs/VAE/params.csv", "a") as file:
+                file.write("{train_loss},".format(train_loss=train_loss.item()))
             start = time.time()
             total_loss = 0
             loss_count = 0
