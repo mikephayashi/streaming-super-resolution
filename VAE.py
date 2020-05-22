@@ -34,13 +34,13 @@ class VAE(nn.Module):
         super(VAE, self).__init__()
         self.encoder = nn.Sequential(
             nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Conv2d(32, 64, kernel_size=4, stride=2),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Conv2d(64, 128, kernel_size=4, stride=2),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Conv2d(128, 256, kernel_size=4, stride=2),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             Flatten()
         )
 
@@ -51,11 +51,11 @@ class VAE(nn.Module):
         self.decoder = nn.Sequential(
             UnFlatten(),
             nn.ConvTranspose2d(h_dim, 128, kernel_size=4, stride=3),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.ConvTranspose2d(128, 64, kernel_size=4, stride=3),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.ConvTranspose2d(64, 32, kernel_size=6, stride=3),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.ConvTranspose2d(32, image_channels, kernel_size=5, stride=3),
             nn.Sigmoid(),
         )
