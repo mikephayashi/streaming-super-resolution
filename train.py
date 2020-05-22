@@ -20,7 +20,7 @@ import torch.multiprocessing as mp
 from models.VQVAE2 import VQVAE
 
 NUM_EPOCHS = 10
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 if not os.path.exists("./params/VQVAE"):
     os.makedirs("./params/VQVAE")
@@ -62,7 +62,6 @@ for epoch in range(NUM_EPOCHS):
     train_loss = 0
     loss_count = 0
 
-    import pdb; pdb.set_trace()
     for batch_features in train_loader:
 
         # Loss and back
