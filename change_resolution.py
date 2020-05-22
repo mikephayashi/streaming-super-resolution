@@ -21,7 +21,7 @@ from threading import Semaphore
 
 class Change_Resolution:
 
-    def __init__(self, name, dat_type, video, skip):
+    def __init__(self, name, data_type, video, skip):
         self.video = video
         self.data_type = data_type
         self.extracted_train_path = "./res/frames/train/" + name + "/"
@@ -32,6 +32,10 @@ class Change_Resolution:
         self.skip = skip
         # if not os.path.exists(self.resized_path):
         #     os.makedirs(self.resized_path)
+        if data_type == "train" and not os.path.exists(self.extracted_train_path):
+            os.makedirs(self.extracted_train_path)
+        if data_type == "test" and not os.path.exists(self.extracted_test_path):
+            os.makedirs(self.extracted_test_path)
 
         # Output picture dimensions
         with open(self.info_path, 'a+') as info:
@@ -48,12 +52,13 @@ class Change_Resolution:
         to_skip = self.skip
         while success:
             if to_skip == 0:
-                if data_type == "train":
+                print("dt: ", self.data_type)
+                if self.data_type == "train":
                     cv2.imwrite(self.extracted_train_path + "frame%d.jpg" %
                                 self.num_frames, image)     # save frame as JPEG file
-                elif data_type == "test:"
-                cv2.imwrite(self.extracted_test_path + "frame%d.jpg" %
-                            self.num_frames, image)
+                elif self.data_type == "test":
+                    cv2.imwrite(self.extracted_test_path + "frame%d.jpg" %
+                                self.num_frames, image)
                 self.num_frames += 1
             success, image = vidcap.read()
             to_skip -= 1
@@ -141,7 +146,7 @@ if __name__ == "__main__":
             file_name, data_type, "./res/youtube_vids/{data_type}/{file_name}".format(data_type=data_type, file_name=file_name), skip)
         original_vid.extract_frames()
         # original_vid.change_res(width, height)
-        original_vid.remove_vid()
+        # original_vid.remove_vid()
 
         sem.release()
 
