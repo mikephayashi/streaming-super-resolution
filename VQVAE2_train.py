@@ -114,7 +114,7 @@ for epoch in range(NUM_EPOCHS):
                        "./params/VQVAE/params{num}.pt".format(num=param_count))
             total_loss = total_loss / loss_count
             with open("./logs/VQVAE/params.txt", "a") as file:
-                file.write("{train_loss}".format(train_loss=train_loss.item()))
+                file.write("{train_loss}\n".format(train_loss=train_loss.item()))
             start = time.time()
             total_loss = 0
             loss_count = 0
