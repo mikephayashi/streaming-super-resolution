@@ -21,7 +21,7 @@ Reconstructs streamed low res to high res video
 * Key Generation for gcp instance: `ssh-keygen -t rsa -f ./ssh_keys/key -C mikephayashi` [Ref](https://www.youtube.com/watch?v=2ibBF9YqveY)
 * Transferring files: 
   * Local to vm (run on local)`scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution`
-  * Vm to local (run on local): `scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs /Users/michaelhayashi/Desktop`
+  * Vm to local (run on local): `scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/reconstructed/VQVAE /Users/michaelhayashi/Desktop`
 * `git reset --hard`
 
 ## download_yt.py:
