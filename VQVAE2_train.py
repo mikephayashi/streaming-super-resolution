@@ -72,7 +72,7 @@ train_set = torchvision.datasets.ImageFolder(
     transform=transform
 )
 train_loader = data.DataLoader(
-    train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
+    train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=10, pin_memory=True)
 
 print("Number of batches {num_batches}".format(num_batches=len(train_loader)))
 
