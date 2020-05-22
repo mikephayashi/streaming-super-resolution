@@ -3,15 +3,13 @@ m?= update
 run:
 	python3 download_yt.py -n 1 -s "programming tutorials" -c ./client.json
 
-run-all:
+get-vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
-	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
-	python3 main.py
+	python3 change_resolution.py
 	
-test-all:
+get-test:
 	python3 download_yt.py -r 2 -a 1 -s "programming tutorials" -c ./client.json
-	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
-	python3 main.py
+	python3 change_resolution.py 
 
 long:
 	python3 download_yt.py -n 70 -e standard -u short -s "programming tutorials" -c ./client.json

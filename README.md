@@ -37,7 +37,8 @@ Reconstructs streamed low res to high res video
 ## GCP
 * SSH `ssh -i ./ssh_keys/key mikephayashi@34.82.82.235`
 * Key Generation for gcp instance: `ssh-keygen -t rsa -f ./ssh_keys/key -C mikephayashi` [Ref](https://www.youtube.com/watch?v=2ibBF9YqveY)
-* Transferring files: `scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/`
+* Transferring files: `scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution`
+* `git reset --hard`
 
 ## download_yt.py:
 
@@ -77,9 +78,7 @@ For other runs:
 - Default
   - Width: 100
   - Height: 100
-- <video> = path to video
-- <name> = name of new folders
-Usage: `python3 change_resolution.py -n <name> -v <video> [optional]-w <width> [optional]-h <height>`
+Usage: `Usage: python3 change_resolution.py [optional]-w <width> [optional]-h <height> -s/--skip= <num to skip default=6>`
 
 Outputs to `res/frames/<name>` (extracted frames of video) and to `res/resized/<name>` (changed resolution of extractedframes)
 

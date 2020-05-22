@@ -34,7 +34,7 @@ if not os.path.exists("./logs/VAE"):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VAE()
-optimizer = optim.Adam(model.parameters(), lr=1e-3)
+optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
