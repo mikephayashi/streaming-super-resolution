@@ -97,7 +97,6 @@ for epoch in range(NUM_EPOCHS):
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
-        criterion(outputs[0], batch_features).backward()
         optimizer.step()
 
         if iteration % 10 == 0:
