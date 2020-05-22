@@ -40,7 +40,6 @@ def load_model(model, checkpoint, device):
     return model
 
 
-filename = './res/output.jpg'
 vqvae_path = './params/VQVAE/params1.pt'
 
 NUM_EPOCHS = 100

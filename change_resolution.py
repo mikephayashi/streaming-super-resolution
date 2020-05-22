@@ -21,8 +21,9 @@ from threading import Semaphore
 
 class Change_Resolution:
 
-    def __init__(self, name, video, skip):
+    def __init__(self, name, dat_type, video, skip):
         self.video = video
+        self.data_type = data_type
         self.extracted_train_path = "./res/frames/train/" + name + "/"
         self.extracted_test_path = "./res/frames/test/" + name + "/"
         # self.resized_path = "./res/resized/" + name + "/"
@@ -47,8 +48,12 @@ class Change_Resolution:
         to_skip = self.skip
         while success:
             if to_skip == 0:
-                cv2.imwrite(self.extracted_train_path + "frame%d.jpg" %
-                            self.num_frames, image)     # save frame as JPEG file
+                if data_type == "train":
+                    cv2.imwrite(self.extracted_train_path + "frame%d.jpg" %
+                                self.num_frames, image)     # save frame as JPEG file
+                elif data_type == "test:"
+                cv2.imwrite(self.extracted_test_path + "frame%d.jpg" %
+                            self.num_frames, image)
                 self.num_frames += 1
             success, image = vidcap.read()
             to_skip -= 1
@@ -133,7 +138,7 @@ if __name__ == "__main__":
         sem.acquire()
         print("Extracting frames {file_name}".format(file_name=file_name))
         original_vid = Change_Resolution(
-            file_name, "./res/youtube_vids/{data_type}/{file_name}".format(data_type=data_type, file_name=file_name), skip)
+            file_name, data_type, "./res/youtube_vids/{data_type}/{file_name}".format(data_type=data_type, file_name=file_name), skip)
         original_vid.extract_frames()
         # original_vid.change_res(width, height)
         original_vid.remove_vid()
