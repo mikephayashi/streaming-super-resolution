@@ -24,10 +24,15 @@ Reconstructs streamed low res to high res video
         - [Michael's Colab](#michaels-colab)
   - [TODO:](#todo)
   - [FIXME:](#fixme)
+  - [General notes](#general-notes)
   - [GCP](#gcp)
   - [download_yt.py:](#downloadytpy)
   - [change_resolution.py:](#changeresolutionpy)
   - [main.py:](#mainpy)
+
+## General notes
+
+[Conv Transpose Output Dimensions](https://datascience.stackexchange.com/questions/26451/how-to-calculate-the-output-shape-of-conv2d-transpose)
 
 ## GCP
 * SSH `ssh -i ./ssh_keys/key mikephayashi@34.82.82.235`
