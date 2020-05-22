@@ -84,46 +84,46 @@ losses = []
 ssims = []
 psnrs = []
 start = time.time()
+with torch.no_grad():
 
-for epoch in range(NUM_EPOCHS):
-    loss = 0
-    ssim_score = 0
-    psnr = 0
-    iteration = 0
+    for epoch in range(NUM_EPOCHS):
+        loss = 0
+        ssim_score = 0
+        psnr = 0
+        iteration = 0
 
-    for batch_features in test_loader:
+        for batch_features in test_loader:
 
-        batch_features = batch_features[0].to(device)
-        optimizer.zero_grad()
-        outputs = model(batch_features)
-        test_loss = criterion(outputs[0], batch_features)
+            batch_features = batch_features[0].to(device)
+            optimizer.zero_grad()
+            outputs = model(batch_features)
+            test_loss = criterion(outputs[0], batch_features)
 
-        #FIXME: 
+            #FIXME: 
 
-        import pdb; pdb.set_trace()
-        # SSIM
-        ssim_score += ssim(batch_features.view(
-            (-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
+            import pdb; pdb.set_trace()
+            # SSIM
+            ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
 
-        # PSNR
-        mse = torch.mean((batch_features.view((-1, 3, 128, 128)
-                                              ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
-        psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
+            # PSNR
+            mse = torch.mean((batch_features.view((-1, 3, 128, 128)
+                                                ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
+            psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
-        print("SSIM: ", ssim_score)
-        print("PSNR: ", psnr)
+            print("SSIM: ", ssim_score)
+            print("PSNR: ", psnr)
 
-        if iteration % 10 == 0:
-            print("Iteration {it}".format(it=iteration))
-            print(test_loss.item())
-            end = time.time()
-            time_dif = end - start
-            print("Time: ", time_dif)
-        if iteration == 50:
-            start = time.time()
-                #         with open("./logs/VQVAE/params.txt", "a") as file:
-                # file.write("{train_loss}".format(train_loss=train_loss.item()))
+            if iteration % 10 == 0:
+                print("Iteration {it}".format(it=iteration))
+                print(test_loss.item())
+                end = time.time()
+                time_dif = end - start
+                print("Time: ", time_dif)
+            if iteration == 50:
+                start = time.time()
+                    #         with open("./logs/VQVAE/params.txt", "a") as file:
+                    # file.write("{train_loss}".format(train_loss=train_loss.item()))
 
-        iteration += 1
+            iteration += 1
 
-    print("Epoch:{loss}".format(loss=loss))
+        print("Epoch:{loss}".format(loss=loss))
