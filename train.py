@@ -30,13 +30,9 @@ if not os.path.exists("./logs/VQVAE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VQVAE()
-model.load_state_dict(torch.load("'./vae example/vqvae_560.pt'"))
+model.load_state_dict(torch.load("./vae example/vqvae_560.pt"))
 model.to(device)
 count = 0
-# for param in model.parameters():
-#     count += 1
-#     if count != 58:
-#         param.requires_grad = False
 
 optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
 criterion = nn.MSELoss()
