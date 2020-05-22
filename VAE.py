@@ -14,7 +14,7 @@ class Flatten(nn.Module):
         return input.view(input.size(0), -1)
 
 class Break(nn.Module):
-    def forwared(self, input):
+    def forward(self, input):
         if self.iteration == 13:
             import pdb; pdb.set_trace()
         return input
