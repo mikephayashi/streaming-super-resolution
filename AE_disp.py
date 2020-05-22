@@ -31,7 +31,7 @@ BATCH_SIZE = 128
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = AE()
+model = AE(input_shape=DIMENSIONS)
 model.load_state_dict('./params/AE/params8.pt')
 model = model.to(device)
 model.eval()
