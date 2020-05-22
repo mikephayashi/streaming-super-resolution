@@ -76,11 +76,6 @@ test_loader = data.DataLoader(
 print("Number of batches {num_batches}".format(num_batches=len(test_loader)))
 
 cur_epochs = 0
-param_count = 0
-total_epochs = []
-losses = []
-ssims = []
-psnrs = []
 start = time.time()
 with torch.no_grad():
 
@@ -129,4 +124,5 @@ with torch.no_grad():
                 psnr = 0
                 metric_counter = 0
 
-        print("Epoch:{loss}".format(loss=loss))
+        cur_epoch += 1
+        print("Epoch:{cur_epoch}".format(cur_epoch=cur_epoch))
