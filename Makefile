@@ -3,8 +3,9 @@ m?= update
 run:
 	python3 download_yt.py -n 1 -s "programming tutorials" -c ./client.json
 
-get-vids:
+vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
+
 	
 get-test:
 	python3 download_yt.py -r 2 -a 1 -s "programming tutorials" -c ./client.json

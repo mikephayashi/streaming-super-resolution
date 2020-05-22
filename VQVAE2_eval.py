@@ -130,3 +130,6 @@ with torch.no_grad():
                 metric_counter = 0
 
         print("Epoch:{loss}".format(loss=loss))
+
+from alarm import Alarm
+Alarm().play()
