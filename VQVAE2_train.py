@@ -56,10 +56,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
 model.share_memory()
 count = 0
-for param in model.parameters():
-    count += 1
-    if count != 58:
-        param.requires_grad = False
+# for param in model.parameters():
+#     count += 1
+#     if count != 58:
+#         param.requires_grad = False
 
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
