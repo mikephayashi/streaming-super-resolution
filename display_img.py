@@ -19,13 +19,6 @@ from pytorch_msssim import ssim
 
 from VQVAE2 import VQVAE
 
-def disp_img(input):
-    grid = torchvision.utils.make_grid(input.cpu())
-    img = grid / 2 + 0.5
-    npimg = img.detach().numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
-
 
 def load_model(model, checkpoint, device):
     # ckpt = torch.load(checkpoint)
@@ -49,16 +42,12 @@ def load_model(model, checkpoint, device):
 
 vqvae_path = './params/VQVAE/params4.pt'
 
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
+if not os.path.exists("./reconstructed/VQVAE"):
+    os.makedirs("./reconstructed/VQVAE")
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
-if not os.path.exists("./params/VQVAE"):
-    os.makedirs("./params/VQVAE")
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -66,7 +55,6 @@ model = load_model('vqvae', vqvae_path, device)
 count = 0
 
 criterion = nn.MSELoss()
-
 
 transform = torchvision.transforms.Compose([
     transforms.Resize((128, 128)),
@@ -84,6 +72,7 @@ print("Number of batches {num_batches}".format(num_batches=len(test_loader)))
 
 cur_epoch = 0
 start = time.time()
+iteration = 0
 with torch.no_grad():
 
     for epoch in range(NUM_EPOCHS):
@@ -92,21 +81,24 @@ with torch.no_grad():
 
             batch_features = batch_features[0].to(device)
             outputs = model(batch_features)
-            test_loss += criterion(outputs[0], batch_features)
+            test_loss = criterion(outputs[0], batch_features)
 
             # SSIM
-            ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
+            ssim_score = ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
 
             # PSNR
             mse = torch.mean((batch_features.view((-1, 3, 128, 128)
                                                 ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
-            psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
+            psnr = 20 * torch.log10(255.0 / torch.sqrt(mse))
 
             print("Loss, ", test_loss)
             print("ssim ", ssim_score)
             print("psnr ", psnr)
-            disp_img(batch_features[0])
-            disp_img(outputs[0])
+            torchvision.utils.save_image(batch_features, "./reconstructed/VQVAE/batch" + str(iteration) + ".jpg")
+            torchvision.utils.save_image(outputs[0], "./reconstructed/VQVAE/output" + str(iteration) + ".jpg")
+            import pdb; pdb.set_trace()
+
+            iteration += 1
 
 
         cur_epoch += 1
