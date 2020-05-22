@@ -13,6 +13,11 @@ class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
 
+class Break(nn.Module):
+    def forwared(self, input):
+        import pdb; pdb.set_trace()
+        return input
+
 
 class UnFlatten(nn.Module):
     def forward(self, input, size=9216):
@@ -23,12 +28,16 @@ class VAE(nn.Module):
         super(VAE, self).__init__()
         self.encoder = nn.Sequential(
             nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
+            Break(),
             nn.ReLU(),
             nn.Conv2d(32, 64, kernel_size=4, stride=2),
+            Break(),
             nn.ReLU(),
             nn.Conv2d(64, 128, kernel_size=4, stride=2),
+            Break(),
             nn.ReLU(),
             nn.Conv2d(128, 256, kernel_size=4, stride=2),
+            Break(),
             nn.ReLU(),
             Flatten()
         )
@@ -65,7 +74,6 @@ class VAE(nn.Module):
         return self.bottleneck(self.encoder(x))[0]
 
     def forward(self, x):
-        import pdb; pdb.set_trace()
         h = self.encoder(x)
         z, mu, logvar = self.bottleneck(h)
         z = self.fc3(z)
