@@ -65,6 +65,7 @@ criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
+    transforms.Resize(360),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
