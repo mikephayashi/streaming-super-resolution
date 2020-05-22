@@ -20,8 +20,6 @@ from pytorch_msssim import ssim
 from VAE import VAE
 
 
-vqvae_path = './params/VAE/params1.pt'
-
 if not os.path.exists("./logs/VAE"):
     os.makedirs("./logs/VAE")
 
@@ -36,6 +34,7 @@ if not os.path.exists("./logs/VAE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VAE()
+model.load_state_dict(torch.load('./params/VAE/params1.pt'))
 model = model.to(device)
 model.eval()
 count = 0

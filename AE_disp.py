@@ -78,7 +78,7 @@ with torch.no_grad():
             print("ssim ", ssim_score)
             print("psnr ", psnr)
             torchvision.utils.save_image(batch_features, "./reconstructed/AE/batch" + str(iteration) + ".jpg")
-            torchvision.utils.save_image(outputs[0], "./reconstructed/AE/output" + str(iteration) + ".jpg")
+            torchvision.utils.save_image(outputs, "./reconstructed/AE/output" + str(iteration) + ".jpg")
             import pdb; pdb.set_trace()
 
             iteration += 1
