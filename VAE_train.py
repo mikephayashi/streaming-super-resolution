@@ -1,5 +1,6 @@
 import os
 import time
+from math import isnan
 from math import sqrt
 import torch
 from torch import nn
@@ -19,7 +20,7 @@ from VAE import VAE
 
 
 
-NUM_EPOCHS = 100
+NUM_EPOCHS = 10
 BATCH_SIZE = 128
 
 if not os.path.exists("./params/VAE"):
@@ -66,14 +67,17 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
-        train_loss.backward()
-        optimizer.step()
-        total_loss += train_loss.item()
-
+        if not isnan(train_loss.item()):
+            train_loss.backward()
+            optimizer.step()
+            total_loss += train_loss.item()
+            loss_count += 1
+        else:
+            print("nan yo")
 
         # Update counters
         iteration += 1
-        loss_count += 1
+        # loss_count += 1
 
         # Periodically print and save
         if iteration % 10 == 0:
@@ -85,7 +89,7 @@ for epoch in range(NUM_EPOCHS):
         if iteration % 50 == 0:
             param_count += 1
             torch.save(model.state_dict(),
-                       "./params/VAE/params{num}.pt".format(num=param_count))
+                    "./params/VAE/params{num}.pt".format(num=param_count))
             total_loss = total_loss / loss_count
             with open("./logs/VAE/params.csv", "a") as file:
                 file.write("{train_loss},".format(train_loss=train_loss.item()))
