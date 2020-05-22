@@ -75,7 +75,7 @@ test_loader = data.DataLoader(
 
 print("Number of batches {num_batches}".format(num_batches=len(test_loader)))
 
-cur_epochs = 0
+cur_epoch = 0
 start = time.time()
 with torch.no_grad():
 
