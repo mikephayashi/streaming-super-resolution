@@ -76,6 +76,7 @@ class VAE(nn.Module):
 
     def forward(self, x, iteration):
         if iteration == 13:
+            import pdb; pdb.set_trace()
             self.encoder = nn.Sequential(
                 nn.Conv2d(3, 32, kernel_size=4, stride=2),
                 Break(),
