@@ -34,7 +34,7 @@ print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE(input_shape=DIMENSIONS)
 model = model.to(device)
-optimizer = optim.Adam(model.parameters(), lr=2, weight_decay=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=1, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
