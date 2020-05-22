@@ -15,6 +15,8 @@ from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
 
+import torch.multiprocessing as mp
+
 from VQVAE2 import VQVAE
 
 
@@ -52,6 +54,7 @@ if not os.path.exists("./logs/VQVAE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
+model.share_memory()
 count = 0
 for param in model.parameters():
     count += 1
@@ -96,6 +99,7 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
+        print("Loss ", train_loss.item())
         train_loss.backward()
         optimizer.step()
 
@@ -104,13 +108,13 @@ for epoch in range(NUM_EPOCHS):
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
-        # if iteration == 50:
-        #     param_count += 1
-        #     torch.save(model.state_dict(),
-        #                "./params/VQVAE/params{num}.pt".format(num=param_count))
-        #     with open("./logs/VQVAE/params.txt", "a") as file:
-        #         file.write("{train_loss}".format(train_loss=train_loss.item()))
-        #     start = time.time()
+        if iteration == 50:
+            param_count += 1
+            torch.save(model.state_dict(),
+                       "./params/VQVAE/params{num}.pt".format(num=param_count))
+            with open("./logs/VQVAE/params.txt", "a") as file:
+                file.write("{train_loss}".format(train_loss=train_loss.item()))
+            start = time.time()
 
         iteration += 1
 
