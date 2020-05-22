@@ -68,7 +68,9 @@ for epoch in range(NUM_EPOCHS):
         train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
         optimizer.step()
+        import pdb; pdb.set_trace()
         total_loss += train_loss.item()
+
 
         # Update counters
         iteration += 1
@@ -77,7 +79,6 @@ for epoch in range(NUM_EPOCHS):
         # Periodically print and save
         if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
-            import pdb; pdb.set_trace()
             print("loss:", total_loss / loss_count)
             end = time.time()
             time_dif = end - start
