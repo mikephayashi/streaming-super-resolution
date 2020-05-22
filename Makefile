@@ -35,8 +35,9 @@ clear-all:
 	rm -rf ./params
 	rm -rf ./logs
 
-mv-out:
+pull:
 	mv ./res ../
-
-mv-in:
+	git reset --hard
+	git pull
 	mv ../res ./
+	
