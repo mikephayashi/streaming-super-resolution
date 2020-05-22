@@ -20,27 +20,7 @@ from pytorch_msssim import ssim
 from AE import AE
 
 
-def load_model(model, checkpoint, device):
-    # ckpt = torch.load(checkpoint)
-    ckpt = torch.load(checkpoint, map_location='cpu')
 
-    if 'args' in ckpt:
-        args = ckpt['args']
-
-    if model == 'vqvae':
-        model = VQVAE()
-
-    if 'model' in ckpt:
-        ckpt = ckpt['model']
-
-    model.load_state_dict(ckpt)
-    model = model.to(device)
-    model.eval()
-
-    return model
-
-
-vqvae_path = './params/AE/params8.pt'
 
 if not os.path.exists("./reconstructed/AE"):
     os.makedirs("./reconstructed/AE")
@@ -51,7 +31,10 @@ BATCH_SIZE = 128
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = load_model('vqvae', vqvae_path, device)
+model = AE()
+model.load_state_dict('./params/AE/params8.pt')
+model = model.to(device)
+model.eval()
 count = 0
 
 criterion = nn.MSELoss()
