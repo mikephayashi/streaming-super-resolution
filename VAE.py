@@ -74,7 +74,8 @@ class VAE(nn.Module):
     def representation(self, x):
         return self.bottleneck(self.encoder(x))[0]
 
-    def forward(self, x):
+    def forward(self, x, iteration):
+        self.iteration = iteration
         h = self.encoder(x)
         z, mu, logvar = self.bottleneck(h)
         z = self.fc3(z)
