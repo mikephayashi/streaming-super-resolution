@@ -99,12 +99,12 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
-        print("Loss ", train_loss.item())
         train_loss.backward()
         optimizer.step()
 
         if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
+            print(train_loss.item())
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
