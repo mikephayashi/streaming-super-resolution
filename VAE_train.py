@@ -67,7 +67,8 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
-        import pdb; pdb.set_trace()
+        if isnan(train_loss):
+             import pdb; pdb.set_trace()
         train_loss.backward()
         optimizer.step()
         total_loss += train_loss.item()
