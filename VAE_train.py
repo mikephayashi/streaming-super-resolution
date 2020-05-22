@@ -82,7 +82,7 @@ for epoch in range(NUM_EPOCHS):
             torch.save(model.state_dict(),
                        "./params/VAE/params{num}.pt".format(num=param_count))
             with open("./logs/VAE/params.txt", "a") as file:
-                file.write("{train_loss}".format(loss=train_loss.item()))
+                file.write("{train_loss}".format(train_loss=train_loss.item()))
             start = time.time()
 
         iteration += 1

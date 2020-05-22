@@ -95,8 +95,9 @@ for epoch in range(NUM_EPOCHS):
         batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
-        train_loss = criterion(outputs[0], batch_features)
-        train_loss.backward()
+        # train_loss = criterion(outputs[0], batch_features)
+        # train_loss.backward()
+        criterion(outputs[0], batch_features).backward()
         optimizer.step()
 
         if iteration % 10 == 0:
@@ -104,13 +105,13 @@ for epoch in range(NUM_EPOCHS):
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
-        if iteration == 50:
-            param_count += 1
-            torch.save(model.state_dict(),
-                       "./params/VQVAE/params{num}.pt".format(num=param_count))
-            with open("./logs/VQVAE/params.txt", "a") as file:
-                file.write("{train_loss}".format(loss=train_loss.item()))
-            start = time.time()
+        # if iteration == 50:
+        #     param_count += 1
+        #     torch.save(model.state_dict(),
+        #                "./params/VQVAE/params{num}.pt".format(num=param_count))
+        #     with open("./logs/VQVAE/params.txt", "a") as file:
+        #         file.write("{train_loss}".format(train_loss=train_loss.item()))
+        #     start = time.time()
 
         iteration += 1
 
