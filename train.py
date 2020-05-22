@@ -61,6 +61,7 @@ for epoch in range(NUM_EPOCHS):
     train_loss = 0
     loss_count = 0
 
+    import pdb; pdb.set_trace()
     for batch_features in train_loader:
 
         # Loss and back
