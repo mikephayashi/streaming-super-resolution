@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+from math import isnan
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -75,24 +77,30 @@ class VAE(nn.Module):
         return self.bottleneck(self.encoder(x))[0]
 
     def forward(self, x, iteration):
-        if iteration == 13:
-            import pdb; pdb.set_trace()
-            self.encoder = nn.Sequential(
-                nn.Conv2d(3, 32, kernel_size=4, stride=2),
-                Break(),
-                nn.ReLU(),
-                nn.Conv2d(32, 64, kernel_size=4, stride=2),
-                Break(),
-                nn.ReLU(),
-                nn.Conv2d(64, 128, kernel_size=4, stride=2),
-                Break(),
-                nn.ReLU(),
-                nn.Conv2d(128, 256, kernel_size=4, stride=2),
-                Break(),
-                nn.ReLU(),
-                Flatten()
-            ).to(device)
+        # if iteration == 13:
+        #     import pdb; pdb.set_trace()
+        #     self.encoder = nn.Sequential(
+        #         nn.Conv2d(3, 32, kernel_size=4, stride=2),
+        #         # Break(),
+        #         nn.ReLU(),
+        #         nn.Conv2d(32, 64, kernel_size=4, stride=2),
+        #         # Break(),
+        #         nn.ReLU(),
+        #         nn.Conv2d(64, 128, kernel_size=4, stride=2),
+        #         # Break(),
+        #         nn.ReLU(),
+        #         nn.Conv2d(128, 256, kernel_size=4, stride=2),
+        #         # Break(),
+        #         nn.ReLU(),
+        #         Flatten()
+        #     ).to(device)
         h = self.encoder(x)
+        if isnan(h):
+            import pdb; pdb.set_trace()
         z, mu, logvar = self.bottleneck(h)
+        if isnan(z):
+            import pdb; pdb.set_trace()
         z = self.fc3(z)
+        if isnan(z):
+            import pdb; pdb.set_trace()
         return self.decoder(z), mu, logvar
