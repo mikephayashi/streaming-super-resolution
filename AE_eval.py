@@ -27,6 +27,7 @@ if not os.path.exists("./logs/AE"):
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
+DIMENSIONS = 128
 
 if not os.path.exists("./params/AE"):
     os.makedirs("./params/AE")
@@ -35,7 +36,7 @@ if not os.path.exists("./logs/AE"):
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = AE()
+model = AE(input_shape=DIMENSIONS)
 model = model.to(device)
 model.eval()
 count = 0
