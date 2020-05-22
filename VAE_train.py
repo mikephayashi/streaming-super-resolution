@@ -74,6 +74,7 @@ for epoch in range(NUM_EPOCHS):
             loss_count += 1
         else:
             print("nan yo")
+            import pdb; pdb.set_trace()
 
         # Update counters
         iteration += 1
