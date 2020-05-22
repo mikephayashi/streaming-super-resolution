@@ -101,7 +101,6 @@ with torch.no_grad():
 
             #FIXME: 
 
-            import pdb; pdb.set_trace()
             # SSIM
             ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
 
