@@ -222,6 +222,3 @@ if __name__ == "__main__":
 
         for index, thread in enumerate(threads):
             thread.join()
-
-from alarm import Alarm
-Alarm().hooray()

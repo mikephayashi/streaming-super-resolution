@@ -17,45 +17,27 @@ import matplotlib.pyplot as plt
 
 from pytorch_msssim import ssim
 
-from VQVAE2 import VQVAE
+from VAE import VAE
 
 
-def load_model(model, checkpoint, device):
-    # ckpt = torch.load(checkpoint)
-    ckpt = torch.load(checkpoint, map_location='cpu')
+vqvae_path = './params/VAE/params1.pt'
 
-    if 'args' in ckpt:
-        args = ckpt['args']
-
-    if model == 'vqvae':
-        model = VQVAE()
-
-    if 'model' in ckpt:
-        ckpt = ckpt['model']
-
-    model.load_state_dict(ckpt)
-    model = model.to(device)
-    model.eval()
-
-    return model
-
-
-vqvae_path = './params/VQVAE/params1.pt'
-
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
+if not os.path.exists("./logs/VAE"):
+    os.makedirs("./logs/VAE")
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
-if not os.path.exists("./params/VQVAE"):
-    os.makedirs("./params/VQVAE")
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
+if not os.path.exists("./params/VAE"):
+    os.makedirs("./params/VAE")
+if not os.path.exists("./logs/VAE"):
+    os.makedirs("./logs/VAE")
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = load_model('vqvae', vqvae_path, device)
+model = VAE()
+model = model.to(device)
+model.eval()
 count = 0
 
 criterion = nn.MSELoss()
@@ -122,7 +104,7 @@ with torch.no_grad():
                 test_loss = test_loss / metric_counter
                 ssim_score = ssim_score / metric_counter
                 psnr = psnr / metric_counter
-                with open("./logs/VQVAE/metrics.txt", "a") as file:
+                with open("./logs/VAE/metrics.txt", "a") as file:
                     file.write("loss: {loss}, ssim: {ssim}, psnr: {psnr}".format(loss=test_loss,ssim=ssim_score,psnr=psnr))
                 test_loss = 0
                 ssim_score = 0

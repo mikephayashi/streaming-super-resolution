@@ -1,12 +1,15 @@
 m?= update
 
-run:
-	python3 download_yt.py -n 1 -s "programming tutorials" -c ./client.json
+train:
+	python3 
+
+test:
+	python3
 
 vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
 
-	
+
 get-test:
 	python3 download_yt.py -r 2 -a 1 -s "programming tutorials" -c ./client.json
 	python3 change_resolution.py 
@@ -26,6 +29,10 @@ clear-res:
 
 clear-params:
 	rm -rf ./params
+
+clear-losses:
+	rm -rf ./logs/VAE
+	rm -rf ./logs/VQVAE
 
 clear-logs:
 	rm -rf ./logs

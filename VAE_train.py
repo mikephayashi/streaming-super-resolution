@@ -94,6 +94,3 @@ for epoch in range(NUM_EPOCHS):
 
     cur_epochs += 1
     print("Epoch:{epoch}".format(epoch = cur_epochs))
-
-from alarm import Alarm
-Alarm().hooray()
