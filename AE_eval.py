@@ -37,6 +37,7 @@ if not os.path.exists("./logs/AE"):
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE(input_shape=DIMENSIONS)
+model.load_state_dict(torch.load('./params/AE/params8.pt'))
 model = model.to(device)
 model.eval()
 count = 0
