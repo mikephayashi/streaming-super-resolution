@@ -52,7 +52,6 @@ class Change_Resolution:
         to_skip = self.skip
         while success:
             if to_skip == 0:
-                print("dt: ", self.data_type)
                 if self.data_type == "train":
                     cv2.imwrite(self.extracted_train_path + "frame%d.jpg" %
                                 self.num_frames, image)     # save frame as JPEG file
@@ -146,7 +145,7 @@ if __name__ == "__main__":
             file_name, data_type, "./res/youtube_vids/{data_type}/{file_name}".format(data_type=data_type, file_name=file_name), skip)
         original_vid.extract_frames()
         # original_vid.change_res(width, height)
-        # original_vid.remove_vid()
+        original_vid.remove_vid()
 
         sem.release()
 
