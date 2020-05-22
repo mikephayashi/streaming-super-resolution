@@ -106,11 +106,11 @@ ndf = 64
 nc = 1
 
 class VAE(nn.Module):
-    def __init__(self, nz):
+    def __init__(selfz):
         super(VAE, self).__init__()
 
         self.have_cuda = False
-        self.nz = nz
+        self.nz = 64
 
         self.encoder = nn.Sequential(
             # input is (nc) x 28 x 28
