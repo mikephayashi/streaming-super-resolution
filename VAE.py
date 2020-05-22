@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
@@ -50,7 +52,7 @@ class VAE(nn.Module):
     def reparameterize(self, mu, logvar):
         std = logvar.mul(0.5).exp_()
         # return torch.normal(mu, std)
-        esp = torch.randn(*mu.size())
+        esp = torch.randn(*mu.size()).to(device)
         z = mu + std * esp
         return z
     

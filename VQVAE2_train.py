@@ -70,6 +70,8 @@ train_set = torchvision.datasets.ImageFolder(
 train_loader = data.DataLoader(
     train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
 
+print("Number of batches {num_batches}".format(num_batches=len(train_loader)))
+
 cur_epochs = 0
 param_count = 0
 total_epochs = []
