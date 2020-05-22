@@ -77,6 +77,7 @@ for epoch in range(NUM_EPOCHS):
         # Periodically print and save
         if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
+            import pdb; pdb.set_trace()
             print("loss:", total_loss / loss_count)
             end = time.time()
             time_dif = end - start
@@ -85,7 +86,6 @@ for epoch in range(NUM_EPOCHS):
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/VAE/params{num}.pt".format(num=param_count))
-            import pdb; pdb.set_trace()
             total_loss = total_loss / loss_count
             with open("./logs/VAE/params.txt", "a") as file:
                 file.write("{train_loss}\n".format(train_loss=train_loss.item()))
