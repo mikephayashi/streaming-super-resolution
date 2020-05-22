@@ -67,18 +67,14 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
-        if not isnan(train_loss.item()):
-            train_loss.backward()
-            optimizer.step()
-            total_loss += train_loss.item()
-            loss_count += 1
-        else:
-            print("nan yo")
-            import pdb; pdb.set_trace()
+
+        train_loss.backward()
+        optimizer.step()
+        total_loss += train_loss.item()
 
         # Update counters
         iteration += 1
-        # loss_count += 1
+        loss_count += 1
 
         # Periodically print and save
         if iteration % 10 == 0:

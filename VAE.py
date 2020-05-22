@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+from math import isnan
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class Flatten(nn.Module):
@@ -65,7 +67,15 @@ class VAE(nn.Module):
         return self.bottleneck(self.encoder(x))[0]
 
     def forward(self, x):
+        if isnan(x.item()):
+            import pdb; pdb.set_trace()
         h = self.encoder(x)
+        if isnan(h.item()):
+            import pdb; pdb.set_trace()
         z, mu, logvar = self.bottleneck(h)
+        if isnan(z.item()):
+            import pdb; pdb.set_trace()
         z = self.fc3(z)
+        if isnan(z.item()):
+            import pdb; pdb.set_trace()
         return self.decoder(z), mu, logvar
