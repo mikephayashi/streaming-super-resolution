@@ -22,15 +22,18 @@ class Change_Resolution:
 
     def __init__(self, name, video, skip):
         self.video = video
-        self.extracted_path = "./res/frames/" + name + "/"
-        self.resized_path = "./res/resized/" + name + "/"
+        self.extracted_train_path = "./res/frames/train/" + name + "/"
+        self.extracted_test_path = "./res/frames/test/" + name + "/"
+        # self.resized_path = "./res/resized/" + name + "/"
         self.info_path = "./res/info/" + name + ".txt"
         self.num_frames = 0
         self.skip = skip
-        if not os.path.exists(self.extracted_path):
-            os.makedirs(self.extracted_path)
-        if not os.path.exists(self.resized_path):
-            os.makedirs(self.resized_path)
+        if not os.path.exists(self.extracted_train_path):
+            os.makedirs(self.extracted_train_path)
+        if not os.path.exists(self.extracted_test_path):
+            os.makedirs(self.extracted_test_path)
+        # if not os.path.exists(self.resized_path):
+        #     os.makedirs(self.resized_path)
 
         # Output picture dimensions
         with open(self.info_path, 'a+') as info:
@@ -48,7 +51,7 @@ class Change_Resolution:
         to_skip = self.skip
         while success:
             if to_skip == 0:
-                cv2.imwrite(self.extracted_path + "frame%d.jpg" %
+                cv2.imwrite(self.extracted_train_path + "frame%d.jpg" %
                             self.num_frames, image)     # save frame as JPEG file 
                 self.num_frames += 1
             success, image = vidcap.read()
@@ -69,7 +72,7 @@ class Change_Resolution:
         """
         # FIXME: NUM OF SKIP FRAMES
         for i in range(0, self.num_frames):
-            image = Image.open(self.extracted_path + "frame%d.jpg" % i)
+            image = Image.open(self.extracted_train_path + "frame%d.jpg" % i)
             resized_image = image.resize((width, height))
             resized_image.save(self.resized_path + "frame%d.jpg" % i)
             # print('Changing res: image ', i)
@@ -127,12 +130,15 @@ if __name__ == "__main__":
     # Thread control
     sem = Semaphore(10)  
 
-    onlyfiles = [f for f in listdir("./res/youtube_vids") if isfile(join("./res/youtube_vids", f)) and f != ".DS_Store"]
+    
 
-    def get_imgs(file_name):
+    train_vids = [f for f in listdir("./res/youtube_vids/train") if isfile(join("./res/youtube_vids/train", f)) and f != ".DS_Store"]
+    test_vids = [f for f in listdir("./res/youtube_vids/test") if isfile(join("./res/youtube_vids/test", f)) and f != ".DS_Store"]
+
+    def get_imgs(file_name, data_type):
         sem.acquire()
         print("Changing resolution {file_name}".format(file_name=file_name))
-        original_vid = Change_Resolution(file_name, "./res/youtube_vids/{file_name}".format(file_name=file_name), skip)
+        original_vid = Change_Resolution(file_name, "./res/youtube_vids/{data_type}/{file_name}".format(data_type=data_type, file_name=file_name), skip)
         original_vid.extract_frames()
         # original_vid.change_res(width, height)
         original_vid.remove_vid()
@@ -140,10 +146,15 @@ if __name__ == "__main__":
         sem.release()
     
     threads = []
-    for file_name in onlyfiles:
-        thread = threading.Thread(target=get_imgs, args=(file_name,))
-        threads.append(thread)
-        thread.start()
 
-    for index, thread in enumerate(threads):
-        thread.join()
+    def get_vids(data_type, vid_type):
+        for file_name in vid_type:
+            thread = threading.Thread(target=get_imgs, args=(file_name,data_type,))
+            threads.append(thread)
+            thread.start()
+
+        for index, thread in enumerate(threads):
+            thread.join()
+
+    get_vids("train", train_vids)
+    get_vids("test", test_vids)

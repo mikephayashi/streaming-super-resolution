@@ -4,15 +4,13 @@ youtube_vids
 tf_record.py
 test.py
 youtube_tfrecords
-res/frames
-res/resized
-res/info
+res
 video.avi
 torch_datasets
 client_id.json
 client_secrets.json
 gdrive.py
 params
-/torch_datasets/MNIST
+torch_datasets
 .ipynb_checkpoints
 ssh_keys

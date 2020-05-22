@@ -4,12 +4,12 @@ run:
 	python3 download_yt.py -n 1 -s "programming tutorials" -c ./client.json
 
 run-all:
-	python3 download_yt.py -n 30 -s "programming tutorials" -c ./client.json
+	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
 	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
 	python3 main.py
 	
 test-all:
-	python3 download_yt.py -n 2 -s "programming tutorials" -c ./client.json
+	python3 download_yt.py -r 2 -a 1 -s "programming tutorials" -c ./client.json
 	python3 change_resolution.py -n test -v ./res/youtube_vids/tutvideo.mp4
 	python3 main.py
 

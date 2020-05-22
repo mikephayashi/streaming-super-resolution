@@ -22,20 +22,23 @@ sem = Semaphore(3)  # Limit at 3
 log_sem = Semaphore(1)
 
 
-def download_video(id):
+def download_video(id, data_type):
     """
     id: video id in Youtube
     """
     sem.acquire()
     print("Downloading: ", id)
     log_sem.acquire()
-    with open("logs/videos", "a") as file:
-        file.write("{id}\n".format(id=id))
+    with open("logs/videos.txt", "a") as file:
+        file.write("Train: {id}\n".format(id=id))
         file.close()
     log_sem.release()
     yt = YouTube('https://www.youtube.com/watch?v=' + id)
     stream = yt.streams.first()
-    stream.download('./res/youtube_vids')
+    if data_type == "train":
+        stream.download('./res/youtube_vids/train')
+    elif data_type == "test":
+        stream.download('./res/youtube_vids/test')
     sem.release()
 
 
@@ -130,15 +133,17 @@ if __name__ == "__main__":
     search = None  # Search term used to look up videos
     definition = definitions[0]
     duration = durations[0]
-    num_left = 5  # Number of videos to download
+    num_train = 30  # Number of videos to download
+    num_test = 10
 
     if not os.path.exists("./logs"):
         os.makedirs("./logs")
 
+
     # Parse arguments
     try:
         opts, args = getopt.getopt(
-            argv, "hn:s:e:u:c:", ["number=", "search=", "definition=", "duration=", "client="])
+            argv, "hr:a:s:e:u:c:", ["train=", "test=", "search=", "definition=", "duration=", "client="])
     except getopt.GetoptError:
         print_args()
 
@@ -148,6 +153,10 @@ if __name__ == "__main__":
             sys.exit()
         elif opt in ("-n", "--number"):
             num_left = int(arg)
+        elif opt in ("-r", "--train"):
+            num_train = int(arg)
+        elif opt in ("-a", "--test"):
+            num_test = int(arg)
         elif opt in ("-s", "--search"):
             search = arg
         elif opt in ("-e", "--definition"):
@@ -165,8 +174,10 @@ if __name__ == "__main__":
         elif opt in ("-c", "--client"):
             client = arg
 
-    if not os.path.exists("./res/youtube_vids"):
-        os.makedirs("./res/youtube_vids")
+    if not os.path.exists("./res/youtube_vids/train"):
+        os.makedirs("./res/youtube_vids/train")
+    if not os.path.exists("./res/youtube_vids/test"):
+        os.makedirs("./res/youtube_vids/test")
 
     # Exit if no client is specified
     if client is None:
@@ -179,6 +190,8 @@ if __name__ == "__main__":
         print("You must specify search term")
         print_args()
         sys.exit()
+
+    num_left = num_train + num_test
 
     while num_left > 0:
 
@@ -198,7 +211,12 @@ if __name__ == "__main__":
         # Spawn 3 threads to speed up downloads
         threads = []
         for id in ids:
-            thread = threading.Thread(target=download_video, args=(id,))
+            if num_train > 0:
+                thread = threading.Thread(target=download_video, args=(id,"train",))
+                num_train -= 1
+            elif num_test > 0:
+                thread = threading.Thread(target=download_video, args=(id,"test",))
+                num_test -= 1
             threads.append(thread)
             thread.start()
 

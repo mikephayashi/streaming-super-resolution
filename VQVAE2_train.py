@@ -1,23 +1,21 @@
+import os
+import time
+from math import sqrt
 import torch
 from torch import nn
 from torch.nn import functional as F
-from math import sqrt
+import torchvision
+import torch.optim as optim
+from torch.utils import data
 from functools import partial, lru_cache
 import numpy as np
 from torchvision.utils import save_image
 from tqdm import tqdm
 from torchvision import transforms
 import skimage.io as io
+import matplotlib.pyplot as plt
 
 from VQVAE2 import VQVAE
-
-import time
-import torch.optim as optim
-from torch.utils import data
-
-import matplotlib.pyplot as plt
-import os
-import torchvision
 
 
 def load_model(model, checkpoint, device):
@@ -46,8 +44,12 @@ vqvae_path = './vae example/vqvae_560.pt'
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
-if not os.path.exists("./params"):
+if not os.path.exists("./params")
     os.makedirs("./params")
+if not os.path.exists("./params/VQVAE"):
+    os.makedirs("./params/VQVAE")
+if not os.path.exists("./logs/VQVAE"):
+    os.makedirs("./logs/VQVAE")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
@@ -63,7 +65,7 @@ transform = torchvision.transforms.Compose([
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
 train_set = torchvision.datasets.ImageFolder(
-    root="./res/frames",
+    root="./res/frames/train",
     transform=transform
 )
 train_loader = data.DataLoader(
@@ -90,11 +92,11 @@ for epoch in range(NUM_EPOCHS):
         if iteration == 50:
             param_count += 1
             torch.save(model.state_dict(),
-                       "./params/params{num}.pt".format(num=param_count))
+                       "./params/VQVAE/params{num}.pt".format(num=param_count))
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
-            with open("./logs/times.txt", "a") as file:
+            with open("./logs/VQVAE/times.txt", "a") as file:
                 file.write("{time}".format(time=time_dif))
                 file.close()
             start = time.time()
@@ -112,7 +114,7 @@ for epoch in range(NUM_EPOCHS):
     loss = loss / len(train_loader)
     ssim_score = ssim_score / len(train_loader)
     psnr = psnr / len(train_loader)
-    with open("./logs/params.txt", "a") as file:
+    with open("./logs/VQVAE/params.txt", "a") as file:
         file.write("{loss}, ".format(loss=loss))
         file.write("{ssim}, ".format(ssim=ssim_score))
         file.write("{psnr}\n".format(psnr=psnr))
