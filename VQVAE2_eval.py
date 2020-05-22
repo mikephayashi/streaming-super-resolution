@@ -100,14 +100,15 @@ for epoch in range(NUM_EPOCHS):
 
         #FIXME: 
 
+        import pdb; pdb.set_trace()
         # SSIM
         ssim_score += ssim(batch_features.view(
-            (-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128))).to('cpu')
+            (-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
 
         # PSNR
         mse = torch.mean((batch_features.view((-1, 3, 128, 128)
                                               ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
-        psnr += 20 * torch.log10(255.0 / torch.sqrt(mse)).to('cpu')
+        psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
         print("SSIM: ", ssim_score)
         print("PSNR: ", psnr)
