@@ -67,7 +67,7 @@ transform = torchvision.transforms.Compose([
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
 test_set = torchvision.datasets.ImageFolder(
-    root="./res/frames/train",
+    root="./res/frames/test",
     transform=transform
 )
 test_loader = data.DataLoader(
