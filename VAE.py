@@ -95,12 +95,6 @@ class VAE(nn.Module):
         #         Flatten()
         #     ).to(device)
         h = self.encoder(x)
-        if isnan(h):
-            import pdb; pdb.set_trace()
         z, mu, logvar = self.bottleneck(h)
-        if isnan(z):
-            import pdb; pdb.set_trace()
         z = self.fc3(z)
-        if isnan(z):
-            import pdb; pdb.set_trace()
         return self.decoder(z), mu, logvar
