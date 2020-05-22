@@ -19,29 +19,6 @@ import torch.multiprocessing as mp
 
 from models.VQVAE2 import VQVAE
 
-
-def load_model(model, checkpoint, device):
-    # ckpt = torch.load(checkpoint)
-    ckpt = torch.load(checkpoint, map_location='cpu')
-
-    if 'args' in ckpt:
-        args = ckpt['args']
-
-    if model == 'vqvae':
-        model = VQVAE()
-
-    if 'model' in ckpt:
-        ckpt = ckpt['model']
-
-    model.load_state_dict(ckpt)
-    model = model.to(device)
-    # model.eval()
-
-    return model
-
-
-vqvae_path = './vae example/vqvae_560.pt'
-
 NUM_EPOCHS = 10
 BATCH_SIZE = 128
 
@@ -52,8 +29,9 @@ if not os.path.exists("./logs/VQVAE"):
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# model = load_model('vqvae', vqvae_path, device)
 model = VQVAE()
+model.load_state_dict(torch.load("'./vae example/vqvae_560.pt'"))
+model.to(device)
 count = 0
 # for param in model.parameters():
 #     count += 1
