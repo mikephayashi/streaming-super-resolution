@@ -109,8 +109,9 @@ class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
 
+        nz = 64
         self.have_cuda = False
-        self.nz = 64
+        self.nz = nz
 
         self.encoder = nn.Sequential(
             # input is (nc) x 28 x 28
