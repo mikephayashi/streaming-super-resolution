@@ -58,7 +58,7 @@ criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
-    transforms.Resize((256, 256)),
+    transforms.Resize((128, 128)),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
@@ -84,11 +84,13 @@ for epoch in range(NUM_EPOCHS):
 
     for batch_features in train_loader:
 
+
+        if iteration == 10:
+            print("Iteration {it}".format(it=iteration))
         if iteration == 50:
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/params{num}.pt".format(num=param_count))
-            print("Iteration {it}".format(it=iteration))
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
