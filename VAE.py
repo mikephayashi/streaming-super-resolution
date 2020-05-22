@@ -106,7 +106,7 @@ ndf = 64
 nc = 1
 
 class VAE(nn.Module):
-    def __init__(selfz):
+    def __init__(self):
         super(VAE, self).__init__()
 
         self.have_cuda = False
