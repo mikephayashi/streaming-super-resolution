@@ -57,8 +57,6 @@ for param in model.parameters():
     if count != 58:
         param.requires_grad = False
 
-print(count)
-import pdb; pdb.set_trace()
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
