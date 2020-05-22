@@ -74,7 +74,7 @@ with torch.no_grad():
 
             batch_features = batch_features[0].to(device)
             outputs = model(batch_features)
-            test_loss += criterion(outputs[0], batch_features)
+            test_loss += criterion(outputs, batch_features)
 
             # SSIM
             ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
