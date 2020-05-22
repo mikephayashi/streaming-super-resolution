@@ -34,7 +34,7 @@ print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE(input_shape=DIMENSIONS)
 model = model.to(device)
-optimizer = optim.Adam(model.parameters(), lr=1, weight_decay=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
@@ -67,10 +67,7 @@ for epoch in range(NUM_EPOCHS):
         batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
-        import pdb; pdb.set_trace()
-        train_loss = criterion(outputs[0], batch_features)
-        if isnan(train_loss):
-            import pdb; pdb.set_trace()
+        train_loss = criterion(outputs, batch_features)
         train_loss.backward()
         optimizer.step()
         total_loss += train_loss.item()
