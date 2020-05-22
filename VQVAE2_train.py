@@ -72,7 +72,7 @@ train_set = torchvision.datasets.ImageFolder(
     transform=transform
 )
 train_loader = data.DataLoader(
-    train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=10, pin_memory=True)
+    train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
 
 print("Number of batches {num_batches}".format(num_batches=len(train_loader)))
 
@@ -83,46 +83,34 @@ losses = []
 ssims = []
 psnrs = []
 start = time.time()
-for epoch in range(NUM_EPOCHS):
+
+or epoch in range(NUM_EPOCHS):
     loss = 0
     ssim_score = 0
     psnr = 0
     iteration = 0
 
     for batch_features in train_loader:
-
-        if iteration == 10:
+        if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
         if iteration == 50:
             param_count += 1
+            train_loss = criterion(outputs[0], batch_features).item()
             torch.save(model.state_dict(),
                        "./params/VQVAE/params{num}.pt".format(num=param_count))
-            with open("./logs/VQVAE/times.txt", "a") as file:
-                file.write("{time}".format(time=time_dif))
-                file.close()
+            with open("./logs/VQVAE/params.txt", "a") as file:
+                file.write("{train_loss}".format(loss=train_loss))
             start = time.time()
 
         batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
-        train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
         optimizer.step()
-        loss += train_loss.item()
 
-        iteration += 1
+        iteration += 1 
 
-    loss = loss / len(train_loader)
-    ssim_score = ssim_score / len(train_loader)
-    psnr = psnr / len(train_loader)
-    with open("./logs/VQVAE/params.txt", "a") as file:
-        file.write("{loss}, ".format(loss=loss))
-        file.write("{ssim}, ".format(ssim=ssim_score))
-        file.write("{psnr}\n".format(psnr=psnr))
-    cur_epochs += 1
-    total_epochs.append(cur_epochs)
-    print("epoch : {}/{}, loss = {:.6f}, ssim = {}, psnr = {}".format(epoch +
-                                                                      1, NUM_EPOCHS, loss, ssim_score, psnr))
+    print("Epoch:{loss}".format(loss=loss))
