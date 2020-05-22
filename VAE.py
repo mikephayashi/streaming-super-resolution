@@ -136,7 +136,7 @@ class VAE(nn.Module):
 
         self.decoder = nn.Sequential(
             # input is Z, going into a convolution
-            nn.ConvTranspose2d(     1024, ngf * 8, 4, 2, 0, bias=False),
+            nn.ConvTranspose2d(     1024, ngf * 8, 4, 1, 0, bias=False),
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
             # state size. (ngf*8) x 4 x 4
@@ -148,7 +148,7 @@ class VAE(nn.Module):
             nn.BatchNorm2d(ngf * 2),
             nn.ReLU(True),
             # state size. (ngf*2) x 16 x 16
-            nn.ConvTranspose2d(ngf * 2,     nc, 4, 2, 1, bias=False),
+            nn.ConvTranspose2d(ngf * 2,     nc, 8, 2, 1, bias=False),
             # nn.BatchNorm2d(ngf),
             # nn.ReLU(True),
             # state size. (ngf) x 32 x 32
