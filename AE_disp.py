@@ -27,7 +27,7 @@ if not os.path.exists("./reconstructed/AE"):
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
-
+DIMENSIONS = 128
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
