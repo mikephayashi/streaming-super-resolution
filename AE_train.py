@@ -16,7 +16,7 @@ from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
 
-from VAE import VAE
+from AE import AE
 
 
 
@@ -31,7 +31,7 @@ if not os.path.exists("./logs/AE"):
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = VAE()
+model = AE()
 model = model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()

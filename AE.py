@@ -5,7 +5,7 @@
 import torch
 import torch.nn as nn
 
-class Autoencoder(nn.Module):
+class AE(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
         self.encoder_hidden_layer = nn.Linear(
