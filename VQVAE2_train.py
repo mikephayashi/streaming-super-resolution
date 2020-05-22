@@ -54,6 +54,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
 count = 0
 for param in model.parameters():
+    count += 1
     if count != 58:
         param.requires_grad = False
 
