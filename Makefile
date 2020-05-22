@@ -34,3 +34,9 @@ clear-all:
 	rm -rf ./res
 	rm -rf ./params
 	rm -rf ./logs
+
+mv-out:
+	mv ./res ../
+
+mv-in:
+	mv ../res ./
