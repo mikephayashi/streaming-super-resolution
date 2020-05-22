@@ -19,8 +19,6 @@ from VAE import VAE
 
 
 
-
-
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
@@ -66,6 +64,14 @@ for epoch in range(NUM_EPOCHS):
     iteration = 0
 
     for batch_features in train_loader:
+
+        batch_features = batch_features[0].to(device)
+        optimizer.zero_grad()
+        outputs = model(batch_features)
+        train_loss = criterion(outputs[0], batch_features)
+        train_loss.backward()
+        optimizer.step()
+
         if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
             end = time.time()
@@ -73,19 +79,12 @@ for epoch in range(NUM_EPOCHS):
             print("Time: ", time_dif)
         if iteration == 50:
             param_count += 1
-            train_loss = criterion(outputs[0], batch_features).item()
             torch.save(model.state_dict(),
                        "./params/VAE/params{num}.pt".format(num=param_count))
             with open("./logs/VAE/params.txt", "a") as file:
-                file.write("{train_loss}".format(loss=train_loss))
+                file.write("{train_loss}".format(loss=train_loss.item()))
             start = time.time()
 
-        batch_features = batch_features[0].to(device)
-        optimizer.zero_grad()
-        outputs = model(batch_features)
-        train_loss.backward()
-        optimizer.step()
-
-        iteration += 1 
+        iteration += 1
 
     print("Epoch:{loss}".format(loss=loss))
