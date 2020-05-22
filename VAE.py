@@ -7,8 +7,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-from math import isnan
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class Flatten(nn.Module):
