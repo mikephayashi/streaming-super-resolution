@@ -100,6 +100,8 @@ import torch.utils.data
 import torchvision.utils as vutils
 import torch.backends.cudnn as cudnn
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 ngf = 64
 ndf = 64
@@ -188,7 +190,7 @@ class VAE(nn.Module):
             eps = torch.cuda.FloatTensor(std.size()).normal_()
         else:
             eps = torch.FloatTensor(std.size()).normal_()
-        eps = Variable(eps)
+        eps = Variable(eps).to(device)
         return eps.mul(std).add_(mu)
 
     def forward(self, x):
