@@ -89,7 +89,7 @@ with torch.no_grad():
         ssim_score = 0
         psnr = 0
         iteration = 0
-        metric_counter = 1
+        metric_counter = 0
 
         for batch_features in test_loader:
 
@@ -104,6 +104,9 @@ with torch.no_grad():
             mse = torch.mean((batch_features.view((-1, 3, 128, 128)
                                                 ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
             psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
+
+            iteration += 1
+            metric_counter += 1
 
             if iteration % 10 == 0:
                 print("Iteration {it}".format(it=iteration))
@@ -124,8 +127,6 @@ with torch.no_grad():
                 test_loss = 0
                 ssim_score = 0
                 psnr = 0
-
-            iteration += 1
-            metric_counter += 1
+                metric_counter = 0
 
         print("Epoch:{loss}".format(loss=loss))

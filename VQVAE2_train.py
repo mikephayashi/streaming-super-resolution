@@ -40,10 +40,9 @@ def load_model(model, checkpoint, device):
     return model
 
 
-filename = './res/output.jpg'
 vqvae_path = './vae example/vqvae_560.pt'
 
-NUM_EPOCHS = 100
+NUM_EPOCHS = 10
 BATCH_SIZE = 128
 
 if not os.path.exists("./params/VQVAE"):
@@ -80,30 +79,32 @@ print("Number of batches {num_batches}".format(num_batches=len(train_loader)))
 
 cur_epochs = 0
 param_count = 0
-total_epochs = []
-losses = []
-ssims = []
-psnrs = []
 start = time.time()
-
 for epoch in range(NUM_EPOCHS):
-    loss = 0
-    ssim_score = 0
-    psnr = 0
     iteration = 0
+    total_loss = 0
+    train_loss = 0
+    loss_count = 0
 
     for batch_features in train_loader:
 
+        # Loss and back
         batch_features = batch_features[0].to(device)
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
         train_loss.backward()
         optimizer.step()
+        total_loss += train_loss.item()
 
+        # Update counters
+        iteration += 1
+        loss_count += 1
+
+        # Periodically print and save
         if iteration % 10 == 0:
             print("Iteration {it}".format(it=iteration))
-            print(train_loss.item())
+            print("loss:", total_loss / loss_count)
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
@@ -111,10 +112,12 @@ for epoch in range(NUM_EPOCHS):
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/VQVAE/params{num}.pt".format(num=param_count))
+            total_loss = total_loss / loss_count
             with open("./logs/VQVAE/params.txt", "a") as file:
                 file.write("{train_loss}".format(train_loss=train_loss.item()))
             start = time.time()
+            total_loss = 0
+            loss_count = 0
 
-        iteration += 1
-
-    print("Epoch:{loss}".format(loss=loss))
+    cur_epochs += 1
+    print("Epoch:{epoch}".format(epoch = cur_epochs))
