@@ -15,7 +15,8 @@ class Flatten(nn.Module):
 
 class Break(nn.Module):
     def forwared(self, input):
-        import pdb; pdb.set_trace()
+        if self.iteration == 13:
+            import pdb; pdb.set_trace()
         return input
 
 
@@ -24,7 +25,7 @@ class UnFlatten(nn.Module):
         return input.view(input.size(0), size, 1, 1)
 
 class VAE(nn.Module):
-    def __init__(self, image_channels=3, h_dim=9216, z_dim=32):
+    def __init__(self, image_channels=3, h_dim=9216, z_dim=32, iter = 0):
         super(VAE, self).__init__()
         self.encoder = nn.Sequential(
             nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
