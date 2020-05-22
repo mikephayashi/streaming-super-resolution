@@ -84,7 +84,7 @@ ssims = []
 psnrs = []
 start = time.time()
 
-or epoch in range(NUM_EPOCHS):
+for epoch in range(NUM_EPOCHS):
     loss = 0
     ssim_score = 0
     psnr = 0
