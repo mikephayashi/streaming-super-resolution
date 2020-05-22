@@ -41,7 +41,7 @@ def load_model(model, checkpoint, device):
 
 
 filename = './res/output.jpg'
-vqvae_path = './vae example/vqvae_560.pt'
+vqvae_path = './params/VQVAE/params1.pt'
 
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
@@ -120,6 +120,8 @@ for epoch in range(NUM_EPOCHS):
             print("Time: ", time_dif)
         if iteration == 50:
             start = time.time()
+                #         with open("./logs/VQVAE/params.txt", "a") as file:
+                # file.write("{train_loss}".format(train_loss=train_loss.item()))
 
         iteration += 1
 
