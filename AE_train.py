@@ -22,7 +22,7 @@ from AE import AE
 
 NUM_EPOCHS = 10
 BATCH_SIZE = 128
-DIMENSIONS = 128 * 128
+DIMENSIONS = 128
 
 if not os.path.exists("./params/AE"):
     os.makedirs("./params/AE")
@@ -34,7 +34,7 @@ print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE(input_shape=DIMENSIONS)
 model = model.to(device)
-optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=2, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
