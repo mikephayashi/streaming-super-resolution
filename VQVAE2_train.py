@@ -107,7 +107,7 @@ for epoch in range(NUM_EPOCHS):
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
-        if iteration == 50:
+        if iteration % 50 == 0:
             param_count += 1
             torch.save(model.state_dict(),
                        "./params/VQVAE/params{num}.pt".format(num=param_count))

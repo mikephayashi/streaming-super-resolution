@@ -42,6 +42,9 @@ def load_model(model, checkpoint, device):
 
 vqvae_path = './params/VQVAE/params1.pt'
 
+if not os.path.exists("./logs/VQVAE"):
+    os.makedirs("./logs/VQVAE")
+
 NUM_EPOCHS = 100
 BATCH_SIZE = 128
 
@@ -54,12 +57,7 @@ print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = load_model('vqvae', vqvae_path, device)
 count = 0
-# for param in model.parameters():
-#     count += 1
-#     if count != 58:
-#         param.requires_grad = False
 
-optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
@@ -87,19 +85,17 @@ start = time.time()
 with torch.no_grad():
 
     for epoch in range(NUM_EPOCHS):
-        loss = 0
+        test_loss = 0
         ssim_score = 0
         psnr = 0
         iteration = 0
+        metric_counter = 1
 
         for batch_features in test_loader:
 
             batch_features = batch_features[0].to(device)
-            optimizer.zero_grad()
             outputs = model(batch_features)
-            test_loss = criterion(outputs[0], batch_features)
-
-            #FIXME: 
+            test_loss += criterion(outputs[0], batch_features)
 
             # SSIM
             ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
@@ -109,20 +105,27 @@ with torch.no_grad():
                                                 ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
             psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
-            print("SSIM: ", ssim_score)
-            print("PSNR: ", psnr)
-
             if iteration % 10 == 0:
                 print("Iteration {it}".format(it=iteration))
                 print(test_loss.item())
                 end = time.time()
                 time_dif = end - start
                 print("Time: ", time_dif)
+                print("Loss: ", test_loss / metric_counter)
+                print("SSIM: ", ssim_score / metric_counter)
+                print("PSNR: ", psnr / metric_counter)
             if iteration == 50:
                 start = time.time()
-                    #         with open("./logs/VQVAE/params.txt", "a") as file:
-                    # file.write("{train_loss}".format(train_loss=train_loss.item()))
+                test_loss = test_loss / metric_counter
+                ssim_score = ssim_score / metric_counter
+                psnr = psnr / metric_counter
+                with open("./logs/VQVAE/metrics.txt", "a") as file:
+                    file.write("loss: {loss}, ssim: {ssim}, psnr: {psnr}".format(loss=test_loss,ssim=ssim_score,psnr=psnr))
+                test_loss = 0
+                ssim_score = 0
+                psnr = 0
 
             iteration += 1
+            metric_counter += 1
 
         print("Epoch:{loss}".format(loss=loss))
