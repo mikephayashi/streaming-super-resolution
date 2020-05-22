@@ -91,7 +91,7 @@ class VAE(nn.Module):
                 Break(),
                 nn.ReLU(),
                 Flatten()
-            )
+            ).to(device)
         h = self.encoder(x)
         z, mu, logvar = self.bottleneck(h)
         z = self.fc3(z)
