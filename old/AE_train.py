@@ -16,7 +16,7 @@ from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
 
-from AE import AE
+from models.AE import AE
 
 
 
