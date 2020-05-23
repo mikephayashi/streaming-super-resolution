@@ -32,6 +32,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VQVAE()
 model.load_state_dict(torch.load("./params/VQVAE/params1.pt"))
 model.to(device)
+model.eval()
 count = 0
 
 criterion = nn.MSELoss()
