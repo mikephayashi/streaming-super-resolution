@@ -16,12 +16,12 @@ from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
 
-from VAE import VAE
+from models.VAE import VAE
 
 
 
 NUM_EPOCHS = 10
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 if not os.path.exists("./params/VAE"):
     os.makedirs("./params/VAE")
@@ -38,7 +38,8 @@ criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(360),
+    transforms.CenterCrop(360),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
