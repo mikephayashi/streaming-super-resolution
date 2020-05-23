@@ -4,7 +4,7 @@ import csv
 x = []
 y = []
 iteration = 50
-with open('./results/vqvae_params.csv', newline='') as csvfile:
+with open('../GCP/logs/VQVAE/params.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',',)
     for row in spamreader:
         for val in row:
