@@ -23,7 +23,7 @@ MODEL_NAME = None
 argv = sys.argv[1:]
 
 try:
-    opt, args = getopt.getopt(argv, ":n", "name=")
+    opts, args = getopt.getopt(argv, ":n", "name=")
 except getopt.GetoptError:
     print("Add model name")
 
