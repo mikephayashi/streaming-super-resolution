@@ -25,7 +25,6 @@ git:
 	git push origin master
 	echo https://github.com/mikephayashi/streaming-super-resolution
 
-
 clear-params:
 	rm -rf ./params
 
@@ -35,13 +34,6 @@ clear-losses:
 
 clear-logs:
 	rm -rf ./logs
-
-
-pull:
-	mv ./res ../
-	git reset --hard
-	git pull
-	mv ../res ./
 	
 transfer:
 	scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs/VQVAE /Users/michaelhayashi/Desktop/GCP
