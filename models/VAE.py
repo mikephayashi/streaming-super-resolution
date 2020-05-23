@@ -62,6 +62,28 @@ class VAE(nn.Module):
             nn.ConvTranspose2d(32, image_channels, kernel_size=3, stride=3),
             nn.Sigmoid(),
         )
+
+    def reparameterize(self, mu, logvar):
+        std = logvar.mul(0.5).exp_()
+        # return torch.normal(mu, std)
+        esp = torch.randn(*mu.size()).to(device)
+        z = mu + std * esp
+        return z
+
+    def bottleneck(self, h):
+        mu, logvar = self.fc1(h), self.fc2(h)
+        z = self.reparameterize(mu, logvar)
+        return z, mu, logvar
+
+    def representation(self, x):
+        return self.bottleneck(self.encoder(x))[0]
+
+    def forward(self, x):
+        h = self.encoder(x)
+        z, mu, logvar = self.bottleneck(h)
+        z = self.fc3(z)
+        return self.decoder(z), mu, logvar
+
 """
 360
 """
@@ -95,24 +117,3 @@ class VAE(nn.Module):
 #             nn.ConvTranspose2d(32, image_channels, kernel_size=3, stride=3),
 #             nn.Sigmoid(),
 #         )
-
-    def reparameterize(self, mu, logvar):
-        std = logvar.mul(0.5).exp_()
-        # return torch.normal(mu, std)
-        esp = torch.randn(*mu.size()).to(device)
-        z = mu + std * esp
-        return z
-
-    def bottleneck(self, h):
-        mu, logvar = self.fc1(h), self.fc2(h)
-        z = self.reparameterize(mu, logvar)
-        return z, mu, logvar
-
-    def representation(self, x):
-        return self.bottleneck(self.encoder(x))[0]
-
-    def forward(self, x):
-        h = self.encoder(x)
-        z, mu, logvar = self.bottleneck(h)
-        z = self.fc3(z)
-        return self.decoder(z), mu, logvar
