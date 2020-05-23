@@ -17,33 +17,10 @@ import matplotlib.pyplot as plt
 
 import torch.multiprocessing as mp
 
-from VQVAE2 import VQVAE
-
-
-def load_model(model, checkpoint, device):
-    # ckpt = torch.load(checkpoint)
-    ckpt = torch.load(checkpoint, map_location='cpu')
-
-    if 'args' in ckpt:
-        args = ckpt['args']
-
-    if model == 'vqvae':
-        model = VQVAE()
-
-    if 'model' in ckpt:
-        ckpt = ckpt['model']
-
-    model.load_state_dict(ckpt)
-    model = model.to(device)
-    # model.eval()
-
-    return model
-
-
-vqvae_path = './vae example/vqvae_560.pt'
+from models.VQVAE2 import VQVAE
 
 NUM_EPOCHS = 10
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 if not os.path.exists("./params/VQVAE"):
     os.makedirs("./params/VQVAE")
@@ -52,20 +29,18 @@ if not os.path.exists("./logs/VQVAE"):
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# model = load_model('vqvae', vqvae_path, device)
 model = VQVAE()
+model.load_state_dict(torch.load("./vae example/vqvae_560.pt"))
+model.to(device)
 count = 0
-# for param in model.parameters():
-#     count += 1
-#     if count != 58:
-#         param.requires_grad = False
 
-optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(360),
+    transforms.CenterCrop(360),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])

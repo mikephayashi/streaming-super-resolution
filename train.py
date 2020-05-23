@@ -1,5 +1,6 @@
 import os
 import time
+from math import isnan
 from math import sqrt
 import torch
 from torch import nn
@@ -15,32 +16,29 @@ from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
 
-import torch.multiprocessing as mp
+from VAE import VAE
 
-from models.VQVAE2 import VQVAE
+
 
 NUM_EPOCHS = 10
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 
-if not os.path.exists("./params/VQVAE"):
-    os.makedirs("./params/VQVAE")
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
+if not os.path.exists("./params/VAE"):
+    os.makedirs("./params/VAE")
+if not os.path.exists("./logs/VAE"):
+    os.makedirs("./logs/VAE")
+
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = VQVAE()
-model.load_state_dict(torch.load("./vae example/vqvae_560.pt"))
-model.to(device)
-count = 0
-
-optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
+model = VAE()
+model = model.to(device)
+optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
-    transforms.Resize(360),
-    transforms.CenterCrop(360),
+    transforms.Resize((128, 128)),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
@@ -69,6 +67,8 @@ for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
+        if isnan(train_loss):
+            import pdb; pdb.set_trace()
         train_loss.backward()
         optimizer.step()
         total_loss += train_loss.item()
@@ -87,9 +87,9 @@ for epoch in range(NUM_EPOCHS):
         if iteration % 50 == 0:
             param_count += 1
             torch.save(model.state_dict(),
-                       "./params/VQVAE/params{num}.pt".format(num=param_count))
+                    "./params/VAE/params{num}.pt".format(num=param_count))
             total_loss = total_loss / loss_count
-            with open("./logs/VQVAE/params.csv", "a") as file:
+            with open("./logs/VAE/params.csv", "a") as file:
                 file.write("{train_loss},".format(train_loss=train_loss.item()))
             start = time.time()
             total_loss = 0

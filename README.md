@@ -3,7 +3,6 @@ Reconstructs streamed low res to high res video
 
 ##### [Michael's Colab](https://colab.research.google.com/drive/14aq0YhkuuyEN0FXvNIfEwVEwdBC8nbSg#scrollTo=GytH-0oJXJkX)
 
-
 - [streaming-super-resolution](#streaming-super-resolution)
         - [Michael's Colab](#michaels-colab)
   - [General notes](#general-notes)
@@ -13,7 +12,9 @@ Reconstructs streamed low res to high res video
 
 ## General notes
 
-[Conv Transpose Output Dimensions](https://datascience.stackexchange.com/questions/26451/how-to-calculate-the-output-shape-of-conv2d-transpose)
+* [Conv Transpose Output Dimensions](https://datascience.stackexchange.com/questions/26451/how-to-calculate-the-output-shape-of-conv2d-transpose)
+* AE & VQVAE work
+  * VAE train DOES NOT
 
 ## GCP
 * SSH `ssh -i ./ssh_keys/key mikephayashi@34.82.82.235`
