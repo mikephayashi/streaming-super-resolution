@@ -1,5 +1,10 @@
 m?= update
 
+all:
+	python3 download_yt.py -r 30 -a 10 -s "domics" -c ./client.json
+	python3 change_resolution.py
+	python3 train.py
+
 vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
 
