@@ -55,7 +55,7 @@ class VAE(nn.Module):
             UnFlatten(),
             nn.ConvTranspose2d(h_dim, 128, kernel_size=2, stride=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(128, 64, kernel_size=11, stride=8),
+            nn.ConvTranspose2d(128, 64, kernel_size=11, stride=8a),
             nn.ReLU(),
             nn.ConvTranspose2d(64, 32, kernel_size=7, stride=3),
             nn.ReLU(),

@@ -1,3 +1,7 @@
+"""
+https://github.com/rosinality/vq-vae-2-pytorch
+"""
+
 import torch
 from torch import nn
 from torch.nn import functional as F
