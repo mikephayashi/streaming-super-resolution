@@ -32,7 +32,6 @@ for opt, arg in opts:
         MODEL_NAME = arg
 
 if MODEL_NAME == None or (MODEL_NAME != "VAE" and MODEL_NAME != "VQVAE"):
-    import pdb; pdb.set_trace()
     print("Add model name")
     sys.exit(0)
 
@@ -114,7 +113,7 @@ for epoch in range(NUM_EPOCHS):
             torch.save(model.state_dict(),
                     "./params/{model_name}/params{num}.pt".format(model_name=MODEL_NAME, num=param_count))
             total_loss = total_loss / loss_count
-            with open("./logs/{model_name}/params.csv", "a") as file:
+            with open("./logs/{model_name}/params.csv".format(model_name=MODEL_NAME), "a") as file:
                 file.write("{train_loss},".format(model_name=MODEL_NAME, train_loss=train_loss.item()))
             start = time.time()
             total_loss = 0
