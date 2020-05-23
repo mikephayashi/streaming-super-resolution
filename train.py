@@ -56,7 +56,7 @@ elif MODEL_NAME == "VQVAE":
     from models.VQVAE2 import VQVAE
     model = VQVAE()
 model = model.to(device)
-optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
 criterion = nn.MSELoss()
 
 
@@ -109,8 +109,8 @@ for epoch in range(NUM_EPOCHS):
             time_dif = end - start
             print("Time: ", time_dif)
             with open("./logs/{model_name}/losses.csv".format(model_name=MODEL_NAME), "a") as file:
-                file.write("{train_loss},".format(
-                    model_name=MODEL_NAME, train_loss=train_loss))
+                file.write("{total_loss},".format(
+                    model_name=MODEL_NAME, total_loss=total_loss))
             with open("./logs/{model_name}/times.csv".format(model_name=MODEL_NAME), "a") as file:
                 time_dif = end - start
                 time_dif = end - start
