@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import getopt
 from math import sqrt
 import torch
 from torch import nn

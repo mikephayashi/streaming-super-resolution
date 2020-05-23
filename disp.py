@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import getopt
 from math import sqrt
 import torch
 from torch import nn
@@ -39,10 +40,8 @@ NUM_EPOCHS = 10
 BATCH_SIZE = 64
 SIZE = 128
 
-if not os.path.exists("./params/VQVAE"):
+if not os.path.exists("./reconstructed/VQVAE"):
     os.makedirs("./params/VQVAE")
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
 
 
 print("cuda" if torch.cuda.is_available() else "cpu")
