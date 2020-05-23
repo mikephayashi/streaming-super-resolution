@@ -2,3 +2,4 @@ VQVAE
 128: 
 - 4 epochs
 - 677 batches, 64 batch size
+- Eval on param 64

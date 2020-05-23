@@ -1,19 +1,9 @@
-client.json
-youtube_vids
-.history
-tf_record.py
-test.py
-youtube_tfrecords
-res
-video.avi
-torch_datasets
-client_id.json
-client_secrets.json
-gdrive.py
-params
-torch_datasets
-.ipynb_checkpoints
-ssh_keys
-in development
 __pycache__
-vae example
+.history
+.ipynb_checkpoints
+res
+ssh_keys
+torch_datasets
+youtube_tfrecords
+client.json
+test.py
