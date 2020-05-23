@@ -30,7 +30,7 @@ BATCH_SIZE = 128
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VQVAE()
-model.load_state_dict(torch.load("./params/VQVAE/params1.pt"))
+model.load_state_dict(torch.load("./params/VQVAE/params2.pt"))
 model.to(device)
 model.eval()
 count = 0
