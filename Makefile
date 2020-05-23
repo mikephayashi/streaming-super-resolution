@@ -5,6 +5,12 @@ all:
 	python3 change_resolution.py
 	python3 train.py
 
+vq:
+	python3 train.py -n VQVAE
+
+vae:
+	python3 train.py -n VAE
+
 vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
 

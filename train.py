@@ -80,9 +80,7 @@ param_count = 0
 start = time.time()
 for epoch in range(NUM_EPOCHS):
     iteration = 0
-    total_loss = 0
     train_loss = 0
-    loss_count = 0
 
     for batch_features in train_loader:
 
@@ -96,24 +94,18 @@ for epoch in range(NUM_EPOCHS):
             pdb.set_trace()
         train_loss.backward()
         optimizer.step()
-        total_loss += train_loss.item()
 
         # Update counters
         iteration += 1
-        loss_count += 1
 
         # Periodically print and save
         if iteration % 10 == 0:
+            train_loss = train_loss.item()
             print("Iteration {it}".format(it=iteration))
-            print("loss:", total_loss / loss_count)
+            print("loss:", train_loss)
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
-        if iteration % 50 == 0:
-            param_count += 1
-            torch.save(model.state_dict(),
-                       "./params/{model_name}/params{num}.pt".format(model_name=MODEL_NAME, num=param_count))
-            total_loss = total_loss / loss_count
             with open("./logs/{model_name}/losses.csv".format(model_name=MODEL_NAME), "a") as file:
                 file.write("{train_loss},".format(
                     model_name=MODEL_NAME, train_loss=train_loss.item()))
@@ -122,8 +114,10 @@ for epoch in range(NUM_EPOCHS):
                 time_dif = end - start
                 file.write("{time},".format(time=time))
             start = time.time()
-            total_loss = 0
-            loss_count = 0
+        if iteration % 50 == 0:
+            param_count += 1
+            torch.save(model.state_dict(),
+                       "./params/{model_name}/params{num}.pt".format(model_name=MODEL_NAME, num=param_count))
 
     cur_epochs += 1
     print("Epoch:{epoch}".format(epoch=cur_epochs))
