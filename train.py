@@ -80,7 +80,7 @@ param_count = 0
 start = time.time()
 for epoch in range(NUM_EPOCHS):
     iteration = 0
-    train_loss = 0
+    total_loss = 0 
 
     for batch_features in train_loader:
 
@@ -94,6 +94,7 @@ for epoch in range(NUM_EPOCHS):
             pdb.set_trace()
         train_loss.backward()
         optimizer.step()
+        total_loss += train_loss.item()
 
         # Update counters
         iteration += 1
@@ -102,7 +103,8 @@ for epoch in range(NUM_EPOCHS):
         if iteration % 10 == 0:
             train_loss = train_loss.item()
             print("Iteration {it}".format(it=iteration))
-            print("loss:", train_loss)
+            total_loss = total_loss / 10
+            print("loss:", total_loss)
             end = time.time()
             time_dif = end - start
             print("Time: ", time_dif)
