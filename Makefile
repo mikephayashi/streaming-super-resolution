@@ -44,7 +44,7 @@ pull:
 	mv ../res ./
 	
 transfer:
-	scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs /Users/michaelhayashi/Desktop/GCP
+	scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs/VQVAE /Users/michaelhayashi/Desktop/GCP
 	scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/params/VQVAE /Users/michaelhayashi/Desktop/GCP
 	scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/reconstructed/VQVAE /Users/michaelhayashi/Desktop/GCP
 
