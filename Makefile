@@ -1,15 +1,10 @@
 m?= update
 
-all:
-	python3 VQVAE2_train.py
-	python3 VAE_train.py
-	python3 VQVAE2_eval.py 
-	python3 VAE_eval.py
-	echo "Done :)"
-
 vids:
 	python3 download_yt.py -r 30 -a 10 -s "programming tutorials" -c ./client.json
 
+login:
+	ssh -i ./ssh_keys/key mikephayashi@35.233.175.213
 
 get-test:
 	python3 download_yt.py -r 2 -a 1 -s "programming tutorials" -c ./client.json
@@ -25,8 +20,6 @@ git:
 	git push origin master
 	echo https://github.com/mikephayashi/streaming-super-resolution
 
-clear-res:
-	rm -rf ./res
 
 clear-params:
 	rm -rf ./params
@@ -38,10 +31,6 @@ clear-losses:
 clear-logs:
 	rm -rf ./logs
 
-clear-all:
-	rm -rf ./res
-	rm -rf ./params
-	rm -rf ./logs
 
 pull:
 	mv ./res ../
