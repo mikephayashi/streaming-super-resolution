@@ -4,7 +4,7 @@ import csv
 x = []
 y = []
 iteration = 10
-with open('./results/milestone/domics/VQVAE_360/params.csv', newline='') as csvfile:
+with open('/Users/michaelhayashi/Desktop/GCP/VAE/losses.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',',)
     for row in spamreader:
         for val in row:
@@ -12,6 +12,7 @@ with open('./results/milestone/domics/VQVAE_360/params.csv', newline='') as csvf
             y.append(float(val))
             x.append(iteration)
             iteration += 10
+
 
 tick = 0.1
 ticks = []
