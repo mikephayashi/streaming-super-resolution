@@ -97,7 +97,7 @@ with torch.no_grad():
             test_loss += criterion(outputs[0], batch_features)
 
             # SSIM
-            ssim_score += ssim(batch_features.view((-1, 3, SIZE, 1SIZE28)), outputs[0].view((-1, 3, SIZE, SIZE)))
+            ssim_score += ssim(batch_features.view((-1, 3, SIZE, SIZE)), outputs[0].view((-1, 3, SIZE, SIZE)))
 
             # PSNR
             mse = torch.mean((batch_features.view((-1, 3, SIZE, SIZE)
