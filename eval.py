@@ -54,7 +54,7 @@ if MODEL_NAME == "VAE":
 elif MODEL_NAME == "VQVAE":
     from models.VQVAE2 import VQVAE
     model = VQVAE()
-model.load_state_dict(torch.load("./params/{model_name}/params1.pt".format(model_name=MODEL_NAME)))
+model.load_state_dict(torch.load("./params/{model_name}/params60.pt".format(model_name=MODEL_NAME)))
 model = model.to(device)
 model.eval()
 optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
