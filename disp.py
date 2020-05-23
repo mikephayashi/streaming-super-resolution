@@ -30,7 +30,7 @@ BATCH_SIZE = 128
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VQVAE()
-model.load_state_dict(torch.load("./params/VQVAE/params1.pt"))
+model.load_state_dict(torch.load("../GCP/VQVAE/params1.pt"))
 model.to(device)
 count = 0
 
@@ -74,8 +74,8 @@ with torch.no_grad():
             print("Loss, ", test_loss)
             print("ssim ", ssim_score)
             print("psnr ", psnr)
-            torchvision.utils.save_image(batch_features, "./reconstructed/VQVAE/batch" + str(iteration) + ".jpg")
-            torchvision.utils.save_image(outputs[0], "./reconstructed/VQVAE/output" + str(iteration) + ".jpg")
+            torchvision.utils.save_image(batch_features[0], "./reconstructed/VQVAE/batch" + str(iteration) + ".jpg")
+            torchvision.utils.save_image(outputs[0][0], "./reconstructed/VQVAE/output" + str(iteration) + ".jpg")
             import pdb; pdb.set_trace()
 
             iteration += 1
