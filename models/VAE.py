@@ -56,7 +56,7 @@ class VAE(nn.Module):
             nn.ReLU(),
             nn.ConvTranspose2d(64, 32, kernel_size=4, stride=4),
             nn.ReLU(),
-            nn.ConvTranspose2d(32, image_channels, kernel_size=5, stride=4),
+            nn.ConvTranspose2d(32, image_channels, kernel_size=4, stride=4),
             nn.Sigmoid(),
         )
 
