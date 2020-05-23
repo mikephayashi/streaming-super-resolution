@@ -108,7 +108,7 @@ for epoch in range(NUM_EPOCHS):
             print("Time: ", time_dif)
             with open("./logs/{model_name}/losses.csv".format(model_name=MODEL_NAME), "a") as file:
                 file.write("{train_loss},".format(
-                    model_name=MODEL_NAME, train_loss=train_loss.item()))
+                    model_name=MODEL_NAME, train_loss=train_loss))
             with open("./logs/{model_name}/times.csv".format(model_name=MODEL_NAME), "a") as file:
                 time_dif = end - start
                 time_dif = end - start
