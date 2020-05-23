@@ -55,11 +55,11 @@ class VAE(nn.Module):
             UnFlatten(),
             nn.ConvTranspose2d(h_dim, 128, kernel_size=2, stride=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(128, 64, kernel_size=4, stride=4),
+            nn.ConvTranspose2d(128, 64, kernel_size=11, stride=8),
             nn.ReLU(),
             nn.ConvTranspose2d(64, 32, kernel_size=7, stride=3),
             nn.ReLU(),
-            nn.ConvTranspose2d(32, image_channels, kernel_size=2, stride=2),
+            nn.ConvTranspose2d(32, image_channels, kernel_size=8, stride=2),
             nn.Sigmoid(),
         )
 
