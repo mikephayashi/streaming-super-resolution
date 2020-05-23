@@ -21,7 +21,7 @@ from models.VAE import VAE
 
 
 NUM_EPOCHS = 10
-BATCH_SIZE = 164
+BATCH_SIZE = 64
 
 if not os.path.exists("./params/VAE"):
     os.makedirs("./params/VAE")
