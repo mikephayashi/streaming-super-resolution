@@ -25,7 +25,7 @@ class Flatten(nn.Module):
 
 
 class UnFlatten(nn.Module):
-    def forward(self, input, size=102400):
+    def forward(self, input, size=9216):
         return input.view(input.size(0), size, 1, 1)
 
 
@@ -33,7 +33,7 @@ class UnFlatten(nn.Module):
 128
 """
 class VAE(nn.Module):
-    def __init__(self, image_channels=3, h_dim=102400, z_dim=32):
+    def __init__(self, image_channels=3, h_dim=9216, z_dim=32):
         super(VAE, self).__init__()
         self.encoder = nn.Sequential(
             nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
