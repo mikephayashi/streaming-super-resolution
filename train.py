@@ -92,7 +92,8 @@ for epoch in range(NUM_EPOCHS):
         outputs = model(batch_features)
         train_loss = criterion(outputs[0], batch_features)
         if isnan(train_loss):
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
         train_loss.backward()
         optimizer.step()
         total_loss += train_loss.item()
@@ -111,13 +112,18 @@ for epoch in range(NUM_EPOCHS):
         if iteration % 50 == 0:
             param_count += 1
             torch.save(model.state_dict(),
-                    "./params/{model_name}/params{num}.pt".format(model_name=MODEL_NAME, num=param_count))
+                       "./params/{model_name}/params{num}.pt".format(model_name=MODEL_NAME, num=param_count))
             total_loss = total_loss / loss_count
-            with open("./logs/{model_name}/params.csv".format(model_name=MODEL_NAME), "a") as file:
-                file.write("{train_loss},".format(model_name=MODEL_NAME, train_loss=train_loss.item()))
+            with open("./logs/{model_name}/losses.csv".format(model_name=MODEL_NAME), "a") as file:
+                file.write("{train_loss},".format(
+                    model_name=MODEL_NAME, train_loss=train_loss.item()))
+            with open("./logs/{model_name}/times.csv".format(model_name=MODEL_NAME), "a") as file:
+                time_dif = end - start
+                time_dif = end - start
+                file.write("{time},".format(time=time))
             start = time.time()
             total_loss = 0
             loss_count = 0
 
     cur_epochs += 1
-    print("Epoch:{epoch}".format(epoch = cur_epochs))
+    print("Epoch:{epoch}".format(epoch=cur_epochs))

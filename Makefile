@@ -25,12 +25,12 @@ git:
 	git push origin master
 	echo https://github.com/mikephayashi/streaming-super-resolution
 
+clear-all:
+	rm -rf ./params
+	rm -rf ./logs
+
 clear-params:
 	rm -rf ./params
-
-clear-losses:
-	rm -rf ./logs/VAE
-	rm -rf ./logs/VQVAE
 
 clear-logs:
 	rm -rf ./logs
