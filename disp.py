@@ -40,8 +40,8 @@ NUM_EPOCHS = 10
 BATCH_SIZE = 64
 SIZE = 128
 
-if not os.path.exists("./reconstructed/VQVAE"):
-    os.makedirs("./params/VQVAE")
+if not os.path.exists("./reconstructed/{model_name}".format(model_name=MODEL_NAME)):
+    os.makedirs("./params/{model_name}".format(model_name=MODEL_NAME))
 
 
 print("cuda" if torch.cuda.is_available() else "cpu")
