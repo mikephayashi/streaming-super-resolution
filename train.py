@@ -32,6 +32,7 @@ for opt, arg in opts:
         MODEL_NAME = arg
 
 if MODEL_NAME == None or (MODEL_NAME != "VAE" and MODEL_NAME != "VQVAE"):
+    import pdb; pdb.set_trace()
     print("Add model name")
     sys.exit(0)
 
