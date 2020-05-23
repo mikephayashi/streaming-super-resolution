@@ -31,7 +31,7 @@ for opt, arg in opts:
     if opt in ("-n", "--name"):
         MODEL_NAME = arg
 
-if MODEL_NAME == None or MODEL_NAME != "VAE" or MODEL_NAME != "VQVAE":
+if MODEL_NAME == None or (MODEL_NAME != "VAE" and MODEL_NAME != "VQVAE"):
     print("Add model name")
     sys.exit(0)
 
