@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from math import sqrt
 import torch
@@ -14,36 +15,57 @@ from tqdm import tqdm
 from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
-
 from pytorch_msssim import ssim
 
-from models.VQVAE2 import VQVAE
 
+MODEL_NAME = None
 
+argv = sys.argv[1:]
 
-if not os.path.exists("./logs/VQVAE"):
-    os.makedirs("./logs/VQVAE")
+try:
+    opts, args = getopt.getopt(argv, "n:", ["name="])
+except getopt.GetoptError:
+    print("Add model name")
 
-NUM_EPOCHS = 100
-BATCH_SIZE = 128
+for opt, arg in opts:
+    if opt in ("-n", "--name"):
+        MODEL_NAME = arg
+
+if MODEL_NAME == None or (MODEL_NAME != "VAE" and MODEL_NAME != "VQVAE"):
+    print("Add model name")
+    sys.exit(0)
+
+NUM_EPOCHS = 10
+BATCH_SIZE = 64
+SIZE = 128
 
 if not os.path.exists("./params/VQVAE"):
     os.makedirs("./params/VQVAE")
 if not os.path.exists("./logs/VQVAE"):
     os.makedirs("./logs/VQVAE")
 
+
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = VQVAE()
-model.load_state_dict(torch.load("./params/VQVAE/params1.pt"))
-model.to(device)
+if MODEL_NAME == "VAE":
+    from models.VAE import VAE
+    model = VAE()
+elif MODEL_NAME == "VQVAE":
+    from models.VQVAE2 import VQVAE
+    model = VQVAE()
+model.load_state_dict(torch.load("./params/{model_name}/params1.pt".format(model_name=MODEL_NAME)))
+model = model.to(device)
+model.eval()
+optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
+criterion = nn.MSELoss()
 count = 0
 
 criterion = nn.MSELoss()
 
 
 transform = torchvision.transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(SIZE),
+    transforms.CenterCrop(SIZE),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
@@ -74,11 +96,11 @@ with torch.no_grad():
             test_loss += criterion(outputs[0], batch_features)
 
             # SSIM
-            ssim_score += ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
+            ssim_score += ssim(batch_features.view((-1, 3, SIZE, 1SIZE28)), outputs[0].view((-1, 3, SIZE, SIZE)))
 
             # PSNR
-            mse = torch.mean((batch_features.view((-1, 3, 128, 128)
-                                                ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
+            mse = torch.mean((batch_features.view((-1, 3, SIZE, SIZE)
+                                                ) - outputs[0].view((-1, 3, SIZE, SIZE))) ** 2)
             psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
             iteration += 1
@@ -90,20 +112,20 @@ with torch.no_grad():
                 end = time.time()
                 time_dif = end - start
                 print("Time: ", time_dif)
-                print("Loss: ", test_loss / metric_counter)
-                print("SSIM: ", ssim_score / metric_counter)
-                print("PSNR: ", psnr / metric_counter)
-            if iteration == 50:
-                start = time.time()
                 test_loss = test_loss / metric_counter
                 ssim_score = ssim_score / metric_counter
                 psnr = psnr / metric_counter
-                with open("./logs/VQVAE/metrics.txt", "a") as file:
-                    file.write("loss: {loss}, ssim: {ssim}, psnr: {psnr}".format(loss=test_loss,ssim=ssim_score,psnr=psnr))
+                print("Loss: ", test_loss)
+                print("SSIM: ", ssim_score)
+                print("PSNR: ", psnr)
+                with open("./logs/{model_name}/metrics.txt".format(model_name=MODEL_NAME), "a") as file:
+                    file.write("loss: {loss}, ssim: {ssim}, psnr: {psnr}\n".format(loss=test_loss,ssim=ssim_score,psnr=psnr))
                 test_loss = 0
                 ssim_score = 0
                 psnr = 0
                 metric_counter = 0
+                start = time.time()
+
 
         cur_epoch += 1
         print("Epoch:{cur_epoch}".format(cur_epoch=cur_epoch))

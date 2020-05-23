@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from math import sqrt
 import torch
@@ -14,31 +15,57 @@ from tqdm import tqdm
 from torchvision import transforms
 import skimage.io as io
 import matplotlib.pyplot as plt
-
 from pytorch_msssim import ssim
 
-from models.VQVAE2 import VQVAE
 
+MODEL_NAME = None
 
-if not os.path.exists("./reconstructed/VQVAE"):
-    os.makedirs("./reconstructed/VQVAE")
+argv = sys.argv[1:]
 
-NUM_EPOCHS = 100
-BATCH_SIZE = 128
+try:
+    opts, args = getopt.getopt(argv, "n:", ["name="])
+except getopt.GetoptError:
+    print("Add model name")
+
+for opt, arg in opts:
+    if opt in ("-n", "--name"):
+        MODEL_NAME = arg
+
+if MODEL_NAME == None or (MODEL_NAME != "VAE" and MODEL_NAME != "VQVAE"):
+    print("Add model name")
+    sys.exit(0)
+
+NUM_EPOCHS = 10
+BATCH_SIZE = 64
+SIZE = 128
+
+if not os.path.exists("./params/VQVAE"):
+    os.makedirs("./params/VQVAE")
+if not os.path.exists("./logs/VQVAE"):
+    os.makedirs("./logs/VQVAE")
 
 
 print("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = VQVAE()
-model.load_state_dict(torch.load("./params/VQVAE/params2.pt"))
-model.to(device)
+if MODEL_NAME == "VAE":
+    from models.VAE import VAE
+    model = VAE()
+elif MODEL_NAME == "VQVAE":
+    from models.VQVAE2 import VQVAE
+    model = VQVAE()
+model.load_state_dict(torch.load("./params/{model_name}/params1.pt".format(model_name=MODEL_NAME)))
+model = model.to(device)
 model.eval()
+optimizer = optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
+criterion = nn.MSELoss()
 count = 0
 
 criterion = nn.MSELoss()
 
+
 transform = torchvision.transforms.Compose([
-    transforms.Resize((128, 128)),
+    transforms.Resize(SIZE),
+    transforms.CenterCrop(SIZE),
     transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
@@ -53,33 +80,52 @@ print("Number of batches {num_batches}".format(num_batches=len(test_loader)))
 
 cur_epoch = 0
 start = time.time()
-iteration = 0
 with torch.no_grad():
 
     for epoch in range(NUM_EPOCHS):
+        test_loss = 0
+        ssim_score = 0
+        psnr = 0
+        iteration = 0
+        metric_counter = 0
 
         for batch_features in test_loader:
 
             batch_features = batch_features[0].to(device)
             outputs = model(batch_features)
-            test_loss = criterion(outputs[0], batch_features)
+            test_loss += criterion(outputs[0], batch_features)
 
             # SSIM
-            ssim_score = ssim(batch_features.view((-1, 3, 128, 128)), outputs[0].view((-1, 3, 128, 128)))
+            ssim_score += ssim(batch_features.view((-1, 3, SIZE, SIZE)), outputs[0].view((-1, 3, SIZE, SIZE)))
 
             # PSNR
-            mse = torch.mean((batch_features.view((-1, 3, 128, 128)
-                                                ) - outputs[0].view((-1, 3, 128, 128))) ** 2)
-            psnr = 20 * torch.log10(255.0 / torch.sqrt(mse))
-
-            print("Loss, ", test_loss)
-            print("ssim ", ssim_score)
-            print("psnr ", psnr)
-            torchvision.utils.save_image(batch_features, "./reconstructed/VQVAE/batch" + str(iteration) + ".jpg")
-            torchvision.utils.save_image(outputs[0], "./reconstructed/VQVAE/output" + str(iteration) + ".jpg")
-            import pdb; pdb.set_trace()
+            mse = torch.mean((batch_features.view((-1, 3, SIZE, SIZE)
+                                                ) - outputs[0].view((-1, 3, SIZE, SIZE))) ** 2)
+            psnr += 20 * torch.log10(255.0 / torch.sqrt(mse))
 
             iteration += 1
+            metric_counter += 1
+
+            if iteration % 10 == 0:
+                print("Iteration {it}".format(it=iteration))
+                print(test_loss.item())
+                end = time.time()
+                time_dif = end - start
+                print("Time: ", time_dif)
+                test_loss = test_loss / metric_counter
+                ssim_score = ssim_score / metric_counter
+                psnr = psnr / metric_counter
+                print("Loss: ", test_loss)
+                print("SSIM: ", ssim_score)
+                print("PSNR: ", psnr)
+                test_loss = 0
+                ssim_score = 0
+                psnr = 0
+                metric_counter = 0
+                start = time.time()
+                torchvision.utils.save_image(batch_features, "./reconstructed/{model_name}/batch".format(model_name=MODEL_NAME) + str(iteration) + ".jpg")
+                torchvision.utils.save_image(outputs[0], "./reconstructed/{model_name}/output".format(model_name=MODEL_NAME) + str(iteration) + ".jpg")
+                import pdb; pdb.set_trace()
 
 
         cur_epoch += 1

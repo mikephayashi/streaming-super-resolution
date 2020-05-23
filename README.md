@@ -7,6 +7,9 @@ Reconstructs streamed low res to high res video
         - [Michael's Colab](#michaels-colab)
   - [General notes](#general-notes)
   - [GCP](#gcp)
+  - [train.py](#trainpy)
+  - [eval.py](#evalpy)
+  - [disp.py](#disppy)
   - [download_yt.py:](#downloadytpy)
   - [change_resolution.py:](#changeresolutionpy)
 
@@ -21,10 +24,19 @@ Reconstructs streamed low res to high res video
   * Alt: `ssh -i ./ssh_keys/key mikephayashi@35.233.175.213`
 * Key Generation for gcp instance: `ssh-keygen -t rsa -f ./ssh_keys/key -C mikephayashi` [Ref](https://www.youtube.com/watch?v=2ibBF9YqveY)
 * Transferring files: 
-  * Local to vm (run on local)`scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution`
-  * Vm to local (run on local): `scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/reconstructed/AE /Users/michaelhayashi/Desktop`
+  * Local to vm (run on local)`scp -i ssh_keys/key ./client_secrets.json mikephayashi@34.82.82.235:~/streaming-super-resolution/logs/VQVAE`
+  * Vm to local (run on local): `scp -r -i ssh_keys/key mikephayashi@35.233.175.213:~/streaming-super-resolution/logs/VQVAE /Users/michaelhayashi/Desktop/GCP`
 * `git reset --hard`
 * [Gnu screen](https://stackoverflow.com/questions/48221807/google-cloud-instance-terminate-after-close-browser) Detach main processes, can cloe ssh without terminating process
+
+## train.py
+* Usage: `python3 train.py -n VAE/VQVAE`
+
+## eval.py
+* Usage: `python3 train.py -n VAE/VQVAE`
+
+## disp.py
+* Usage: `python3 train.py -n VAE/VQVAE`
 
 ## download_yt.py:
 

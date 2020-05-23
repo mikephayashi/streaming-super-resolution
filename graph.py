@@ -3,15 +3,22 @@ import matplotlib.pyplot as plt
 import csv
 x = []
 y = []
-iteration = 50
-with open('../GCP/logs/VQVAE/params.csv', newline='') as csvfile:
+iteration = 10
+with open('./results/milestone/domics/VQVAE_360/params.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',',)
     for row in spamreader:
         for val in row:
+            # if float(val) < 1:
             y.append(float(val))
             x.append(iteration)
-            iteration += 50
+            iteration += 10
 
-plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7])
+tick = 0.1
+ticks = []
+for i in range(0, 11):
+    ticks.append(tick)
+    tick += 0.1
+
+plt.yticks(ticks)
 plt.scatter(x, y)
 plt.show()
